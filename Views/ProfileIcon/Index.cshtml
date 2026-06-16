@@ -1,0 +1,95 @@
+﻿@model LoLClientTool.Models.ProfileIconViewModel
+<!-- This page uses ProfileIconViewModel as its model -->
+@{
+    ViewData["Title"] = "LoL Profile Icon Changer"; // Sets the browser/page title
+}
+
+<h1>LoL Profile Icon Changer</h1>
+
+<p>Enter a profile icon ID below.</p>
+
+<form asp-action="Index" method="post">
+    <!-- Submit this form to the Index action using POST -->
+
+    <div>
+        <label asp-for="IconId">Profile Icon ID</label>
+        <!-- Label connected to the IconId property -->
+
+        <input asp-for="IconId" disabled="@(!Model.IsLeagueClientRunning)"/>
+        <!-- Textbox connected to the IconId property -->
+
+        <span asp-validation-for="IconId" style="color: red;"></span>
+        <!-- Shows validation errors for IconId -->
+    </div>
+
+    <br />  
+
+    <button type="submit" disabled="@(!Model.IsLeagueClientRunning)">
+        Set Profile Icon
+    </button>
+    <!-- Submits the form -->
+
+</form>
+
+<br />
+
+<a asp-action="Index">Refresh League Client Status</a>
+
+<hr />
+
+<p><strong>Status:</strong> @Model.StatusMessage</p>
+<!-- Shows the current status message from the model -->
+<hr />
+
+<h2>Profile Icons 30–500</h2>
+
+<div class="icon-grid">
+    @foreach (var icon in Model.AvailableIcons)
+    {
+        <div class="icon-card">
+            <img src="@icon.ImageUrl"
+                 alt="Profile icon @icon.IconId"
+                 width="64"
+                 height="64" />
+
+            <p>ID: @icon.IconId</p>
+
+            <form asp-action="Index" method="post">
+                <input type="hidden" name="IconId" value="@icon.IconId" />
+
+                <button type="submit" disabled="@(!Model.IsLeagueClientRunning)">
+                    Set
+                </button>
+            </form>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <!-- Adds client-side validation scripts -->
+}
+
+<style>
+    .icon-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+    }
+
+    .icon-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+    }
+
+        .icon-card img {
+            margin-bottom: 8px;
+        }
+
+        .icon-card p {
+            margin: 6px 0;
+        }
+</style>

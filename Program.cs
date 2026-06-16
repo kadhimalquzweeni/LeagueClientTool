@@ -1,7 +1,13 @@
+using LoLClientTool.Mvc.Services;
+using LoLClientTool.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<ILeagueClientDetector, LeagueClientDetector>();
+builder.Services.AddScoped<ILeagueClientService, LeagueClientService>();
 
 var app = builder.Build();
 
