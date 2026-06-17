@@ -1,23 +1,39 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">LoL Client Tool</h1>
+<div class="page-shell">
+    <section class="hero">
+        <div class="hero-content">
+            <h1>LoL Client Tool</h1>
 
-    <p>Choose a tool below.</p>
+            <p>
+                A local ASP.NET Core MVC tool for customising your League Client profile.
+                Change your profile icon, browse champion backgrounds, and set profile backgrounds from a clean web interface.
+            </p>
+        </div>
+    </section>
 
-    <a asp-controller="ProfileIcon"
-       asp-action="Index"
-       class="btn btn-primary">
-        Open Profile Icon Changer
-    </a>
+    <div class="tool-grid">
+        <a class="tool-card" asp-controller="ProfileIcon" asp-action="Index">
+            <h2>Profile Icon Changer</h2>
+            <p>
+                Browse available profile icons and set one directly through your local League Client.
+            </p>
+        </a>
 
-    <a asp-controller="ProfileBackground"
-       asp-action="Index"
-       class="btn btn-secondary">
-        Open Profile Background Changer
-    </a>
+        <a class="tool-card" asp-controller="ProfileBackground" asp-action="Index">
+            <h2>Profile Background Changer</h2>
+            <p>
+                Browse champions, view their skins, and set a splash art as your profile background.
+            </p>
+        </a>
 
+        <a class="tool-card" asp-controller="Home" asp-action="Privacy">
+            <h2>Privacy Policy</h2>
+            <p>
+                Learn what this local tool does and does not store.
+            </p>
+        </a>
+    </div>
 </div>
-

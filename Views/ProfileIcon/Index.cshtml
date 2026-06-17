@@ -1,95 +1,89 @@
 ﻿@model LoLClientTool.Models.ProfileIconViewModel
-<!-- This page uses ProfileIconViewModel as its model -->
+
 @{
-    ViewData["Title"] = "LoL Profile Icon Changer"; // Sets the browser/page title
+    ViewData["Title"] = "LoL Profile Icon Changer";
 }
 
-<h1>LoL Profile Icon Changer</h1>
+<div class="page-shell">
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Profile Icon Changer</h1>
 
-<p>Enter a profile icon ID below. Enter 202 for no icon.</p>
+            <p>
+                Choose a profile icon and apply it directly to your local League Client.
+                You can also enter an icon ID manually.
+            </p>
+        </div>
+    </section>
 
-<form asp-action="Index" method="post">
-    <!-- Submit this form to the Index action using POST -->
-
-    <div>
-        <label asp-for="IconId">Profile Icon ID</label>
-        <!-- Label connected to the IconId property -->
-
-        <input asp-for="IconId" disabled="@(!Model.IsLeagueClientRunning)"/>
-        <!-- Textbox connected to the IconId property -->
-
-        <span asp-validation-for="IconId" style="color: red;"></span>
-        <!-- Shows validation errors for IconId -->
+    <div class="status-panel">
+        <strong>Status:</strong> @Model.StatusMessage
     </div>
 
-    <br />  
+    <div class="form-panel">
+        <h2 class="section-title">Manual Icon ID</h2>
 
-    <button type="submit" disabled="@(!Model.IsLeagueClientRunning)">
-        Set Profile Icon
-    </button>
-    <!-- Submits the form -->
+        <p class="muted-text">
+            Enter a profile icon ID below. Enter 202 for no icon.
+        </p>
 
-</form>
+        <form asp-action="Index" method="post">
+            <div class="mb-3">
+                <label asp-for="IconId" class="form-label">Profile Icon ID</label>
 
-<br />
+                <input asp-for="IconId"
+                       class="form-control"
+                       disabled="@(!Model.IsLeagueClientRunning)" />
 
-<a asp-action="Index">Refresh League Client Status</a>
+                <span asp-validation-for="IconId" class="text-danger"></span>
+            </div>
 
-<hr />
+            <button type="submit"
+                    class="btn btn-primary"
+                    disabled="@(!Model.IsLeagueClientRunning)">
+                Set Profile Icon
+            </button>
 
-<p><strong>Status:</strong> @Model.StatusMessage</p>
-<!-- Shows the current status message from the model -->
-<hr />
+            <a asp-action="Index" class="btn btn-secondary">
+                Refresh Status
+            </a>
+        </form>
+    </div>
 
-<h2>Profile Icons 50–78</h2>
+    <hr />
 
-<div class="icon-grid">
-    @foreach (var icon in Model.AvailableIcons)
-    {
-        <div class="icon-card">
-            <img src="@icon.ImageUrl"
-                 alt="Profile icon @icon.IconId"
-                 width="64"
-                 height="64" />
+    <h2 class="section-title">Profile Icons 50–78</h2>
 
-            <p>ID: @icon.IconId</p>
+    <p class="muted-text">
+        Click Set under an icon to apply it to your League profile.
+    </p>
 
-            <form asp-action="Index" method="post">
-                <input type="hidden" name="IconId" value="@icon.IconId" />
+    <div class="icon-grid">
+        @foreach (var icon in Model.AvailableIcons)
+        {
+            <div class="icon-card">
+                <img src="@icon.ImageUrl"
+                     alt="Profile icon @icon.IconId"
+                     width="64"
+                     height="64"
+                     loading="lazy" />
 
-                <button type="submit" disabled="@(!Model.IsLeagueClientRunning)">
-                    Set
-                </button>
-            </form>
-        </div>
-    }
+                <p>ID: @icon.IconId</p>
+
+                <form asp-action="Index" method="post">
+                    <input type="hidden" name="IconId" value="@icon.IconId" />
+
+                    <button type="submit"
+                            class="btn btn-primary"
+                            disabled="@(!Model.IsLeagueClientRunning)">
+                        Set
+                    </button>
+                </form>
+            </div>
+        }
+    </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <!-- Adds client-side validation scripts -->
 }
-
-<style>
-    .icon-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-        gap: 16px;
-        margin-top: 20px;
-    }
-
-    .icon-card {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 12px;
-        text-align: center;
-    }
-
-        .icon-card img {
-            margin-bottom: 8px;
-        }
-
-        .icon-card p {
-            margin: 6px 0;
-        }
-</style>
