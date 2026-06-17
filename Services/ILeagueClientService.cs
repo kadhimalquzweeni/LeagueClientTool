@@ -4,5 +4,8 @@
     {
         Task<LeagueClientResult> SetProfileIconAsync(int iconId);
         Task<LeagueClientResult> SetProfileBackgroundAsync(int skinId);
+        Task<LeagueClientResult> UpdateStatusMessageAsync(string statusMessage);
+        Task<LeagueClientResult> ClearChallengeTokensAsync();
+        Task<LeagueClientResult> CopyFirstChallengeTokenToAllSlotsAsync();
     }
 }

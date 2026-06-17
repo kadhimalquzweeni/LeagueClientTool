@@ -1,0 +1,62 @@
+﻿@model LoLClientTool.Models.ProfileStatusViewModel
+
+@{
+    ViewData["Title"] = "Profile Status Changer";
+}
+
+<div class="page-shell">
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="fw-bold">Profile Status Changer</h1>
+
+            <p>
+                Update the status message shown on your League Client profile and friends list.
+            </p>
+        </div>
+    </section>
+
+    <div class="status-panel status-panel-row">
+        <div>
+            <strong>Status:</strong> @Model.ResultMessage
+        </div>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Refresh Status
+        </a>
+    </div>
+
+    <div class="form-panel">
+        <h2 class="section-title">Status Message</h2>
+
+        <p class="muted-text">
+            Enter the message you want to display on your League profile.
+        </p>
+
+        <form asp-action="Index" method="post">
+            <div class="mb-3">
+                <label asp-for="StatusMessageInput" class="form-label">
+                    New Status Message
+                </label>
+
+                <textarea asp-for="StatusMessageInput"
+                          class="form-control status-art-box"
+                          rows="14"
+                          maxlength="5000"
+                          placeholder="Paste your text art here..."
+                          disabled="@(!Model.IsLeagueClientRunning)"></textarea>
+
+                <span asp-validation-for="StatusMessageInput" class="text-danger"></span>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary"
+                    disabled="@(!Model.IsLeagueClientRunning)">
+                Update Status Message
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

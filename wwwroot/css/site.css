@@ -189,6 +189,15 @@ a {
         align-items: flex-start;
     }
 }
+
+.status-art-box {
+    min-height: 260px;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.95rem;
+    line-height: 1.15;
+    white-space: pre;
+    resize: vertical;
+}
 .form-panel {
     padding: 22px;
     border: 1px solid var(--border-soft);

@@ -1,0 +1,58 @@
+﻿@model LoLClientTool.Models.ChallengeTokensViewModel
+
+@{
+    ViewData["Title"] = "Challenge Tokens";
+}
+
+<div class="page-shell">
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="fw-bold">Challenge Tokens</h1>
+
+            <p>
+                Clear the Challenge Tokens displayed on your League profile banner.
+            </p>
+        </div>
+    </section>
+
+    <div class="status-panel status-panel-row">
+        <div>
+            <strong>Status:</strong> @Model.ResultMessage
+        </div>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Refresh Status
+        </a>
+    </div>
+
+    <div class="form-panel">
+        <h2 class="section-title">Clear Challenge Tokens</h2>
+
+        <p class="muted-text">
+            This removes the currently selected challenge tokens from your profile banner.
+            It does not delete your challenge progress or earned challenges.
+        </p>
+
+        <form asp-action="Clear" method="post">
+            <button type="submit"
+                    class="btn btn-primary"
+                    disabled="@(!Model.IsLeagueClientRunning)">
+                Clear Challenge Tokens
+            </button>
+        </form>
+
+        <h2 class="section-title">Copy First Token Across</h2>
+
+        <p class="muted-text">
+            This copies the Token on your first Token slot across to your second and third.
+        </p>
+
+        <form asp-action="CopyFirstToAll" method="post">
+            <button type="submit"
+                    class="btn btn-primary"
+                    disabled="@(!Model.IsLeagueClientRunning)">
+                Copy First Token to All Slots
+            </button>
+        </form>
+    </div>
+</div>
