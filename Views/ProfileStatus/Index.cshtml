@@ -29,7 +29,8 @@
         <h2 class="section-title">Status Message</h2>
 
         <p class="muted-text">
-            Enter the message you want to display on your League profile.
+            Enter the message you want to display on your League profile.  Large multiline status messages may not persist after restarting the League Client.
+            This tool saves your text locally in the browser so you can quickly reapply it.
         </p>
 
         <form asp-action="Index" method="post">
@@ -59,4 +60,21 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const statusBox = document.getElementById("StatusMessageInput");
+        const storageKey = "lolClientTool.savedStatusMessage";
+
+        if (statusBox) {
+            const savedStatus = localStorage.getItem(storageKey);
+
+            if (savedStatus && !statusBox.value) {
+                statusBox.value = savedStatus;
+            }
+
+            statusBox.addEventListener("input", function () {
+                localStorage.setItem(storageKey, statusBox.value);
+            });
+        }
+    </script>
 }
