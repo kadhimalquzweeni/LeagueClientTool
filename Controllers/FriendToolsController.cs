@@ -19,9 +19,9 @@ namespace LoLProfileChanger.Mvc.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(BuildModel());
+            return View(await BuildModelAsync());
         }
 
         [HttpPost]
@@ -30,7 +30,7 @@ namespace LoLProfileChanger.Mvc.Controllers
             LeagueClientResult result =
                 await _friendToolsService.AcceptAllFriendRequestsAsync();
 
-            return View("Index", BuildModel(result.Message));
+            return View("Index", await BuildModelAsync(result.Message));
         }
 
         [HttpPost]
@@ -39,17 +39,41 @@ namespace LoLProfileChanger.Mvc.Controllers
             LeagueClientResult result =
                 await _friendToolsService.DeleteAllFriendRequestsAsync();
 
-            return View("Index", BuildModel(result.Message));
+            return View("Index", await BuildModelAsync(result.Message));
         }
 
-        private FriendToolsViewModel BuildModel(string? resultMessage = null)
+        [HttpPost]
+        public async Task<IActionResult> RemoveFriendsFromFolder(FriendToolsViewModel model)
+        {
+            if (!model.SelectedGroupId.HasValue)
+            {
+                return View("Index", await BuildModelAsync("Please select a friend folder."));
+            }
+
+            LeagueClientResult result =
+                await _friendToolsService.DeleteFriendsFromGroupAsync(model.SelectedGroupId.Value);
+
+            FriendToolsViewModel updatedModel =
+                await BuildModelAsync(result.Message);
+
+            updatedModel.SelectedGroupId = model.SelectedGroupId;
+
+            return View("Index", updatedModel);
+        }
+
+        private async Task<FriendToolsViewModel> BuildModelAsync(string? resultMessage = null)
         {
             bool isLeagueClientRunning =
                 _leagueClientDetector.IsLeagueClientRunning();
 
+            List<FriendGroupOptionViewModel> friendGroups = isLeagueClientRunning
+                ? await _friendToolsService.GetFriendGroupsAsync()
+                : new List<FriendGroupOptionViewModel>();
+
             return new FriendToolsViewModel
             {
                 IsLeagueClientRunning = isLeagueClientRunning,
+                FriendGroups = friendGroups,
                 ResultMessage = resultMessage
                     ?? (isLeagueClientRunning
                         ? "League Client detected."

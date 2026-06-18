@@ -1,7 +1,9 @@
-﻿using LoLClientTool.Mvc.Services;
+﻿using LoLClientTool.Models;
+using LoLClientTool.Mvc.Services;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 namespace LoLClientTool.Services
@@ -74,7 +76,7 @@ namespace LoLClientTool.Services
                         errors.Add($"{requestId}: {(int)response.StatusCode} {responseBody}");
                     }
                 }
-            
+
 
                 if (errors.Any())
                 {
@@ -347,6 +349,252 @@ namespace LoLClientTool.Services
                 json,
                 Encoding.UTF8,
                 "application/json");
+        }
+        public async Task<List<FriendGroupOptionViewModel>> GetFriendGroupsAsync()
+        {
+            LeagueClientConnection? connection = _leagueClientDetector.GetConnection();
+
+            if (connection == null)
+            {
+                return new List<FriendGroupOptionViewModel>();
+            }
+
+            try
+            {
+                using HttpClient httpClient = CreateHttpClient(connection);
+
+                string url =
+                    $"{GetBaseUrl(connection)}/lol-chat/v1/friend-groups";
+
+                HttpResponseMessage response = await httpClient.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new List<FriendGroupOptionViewModel>
+            {
+                new FriendGroupOptionViewModel
+                {
+                    GroupId = 0,
+                    Name = "General"
+                }
+            };
+                }
+
+                string json = await response.Content.ReadAsStringAsync();
+
+                List<JsonElement>? groups =
+                    JsonSerializer.Deserialize<List<JsonElement>>(
+                        json,
+                        new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+
+                List<FriendGroupOptionViewModel> friendGroups = new()
+        {
+            new FriendGroupOptionViewModel
+            {
+                GroupId = 0,
+                Name = "General"
+            }
+        };
+
+                if (groups == null)
+                {
+                    return friendGroups;
+                }
+
+                List<FriendGroupOptionViewModel> customGroups = groups
+                    .Select(group =>
+                    {
+                        int groupId = GetIntProperty(group, "id") ?? -1;
+                        string groupName = GetStringProperty(group, "name") ?? $"Group {groupId}";
+
+                        return new FriendGroupOptionViewModel
+                        {
+                            GroupId = groupId,
+                            Name = groupName
+                        };
+                    })
+                    .Where(group => group.GroupId > 0)
+                    .OrderBy(group => group.Name)
+                    .ToList();
+
+                friendGroups.AddRange(customGroups);
+
+                return friendGroups;
+            }
+            catch
+            {
+                return new List<FriendGroupOptionViewModel>
+        {
+            new FriendGroupOptionViewModel
+            {
+                GroupId = 0,
+                Name = "General"
+            }
+        };
+            }
+        }
+        public async Task<LeagueClientResult> DeleteFriendsFromGroupAsync(int groupId)
+        {
+            LeagueClientConnection? connection = _leagueClientDetector.GetConnection();
+
+            if (connection == null)
+            {
+                return NotConnectedResult();
+            }
+
+            try
+            {
+                using HttpClient httpClient = CreateHttpClient(connection);
+
+                string friendsUrl =
+                    $"{GetBaseUrl(connection)}/lol-chat/v1/friends";
+
+                HttpResponseMessage friendsResponse = await httpClient.GetAsync(friendsUrl);
+
+                string friendsJson = await friendsResponse.Content.ReadAsStringAsync();
+
+                if (!friendsResponse.IsSuccessStatusCode)
+                {
+                    return new LeagueClientResult
+                    {
+                        Success = false,
+                        Message = $"Could not read friends. Status: {(int)friendsResponse.StatusCode}. Response: {friendsJson}"
+                    };
+                }
+
+                List<JsonElement>? friends =
+                    JsonSerializer.Deserialize<List<JsonElement>>(
+                        friendsJson,
+                        new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        });
+
+                if (friends == null || !friends.Any())
+                {
+                    return new LeagueClientResult
+                    {
+                        Success = true,
+                        Message = "No friends were found."
+                    };
+                }
+
+                List<JsonElement> friendsInGroup = friends
+                    .Where(friend => GetIntProperty(friend, "groupId") == groupId)
+                    .ToList();
+
+                if (!friendsInGroup.Any())
+                {
+                    return new LeagueClientResult
+                    {
+                        Success = true,
+                        Message = "No friends were found in the selected folder."
+                    };
+                }
+
+                int deletedCount = 0;
+                List<string> errors = new();
+
+                foreach (JsonElement friend in friendsInGroup)
+                {
+                    string? friendId = GetFriendId(friend);
+
+                    if (string.IsNullOrWhiteSpace(friendId))
+                    {
+                        errors.Add("Could not find friend ID.");
+                        continue;
+                    }
+
+                    string deleteUrl =
+                        $"{GetBaseUrl(connection)}/lol-chat/v1/friends/{Uri.EscapeDataString(friendId)}";
+
+                    HttpResponseMessage deleteResponse =
+                        await httpClient.DeleteAsync(deleteUrl);
+
+                    if (deleteResponse.IsSuccessStatusCode)
+                    {
+                        deletedCount++;
+                    }
+                    else
+                    {
+                        string responseBody = await deleteResponse.Content.ReadAsStringAsync();
+                        errors.Add($"{friendId}: {(int)deleteResponse.StatusCode} {responseBody}");
+                    }
+                }
+
+                if (errors.Any())
+                {
+                    return new LeagueClientResult
+                    {
+                        Success = false,
+                        Message = $"Deleted {deletedCount} friend(s), but some failed: {string.Join(" | ", errors)}"
+                    };
+                }
+
+                return new LeagueClientResult
+                {
+                    Success = true,
+                    Message = $"Deleted {deletedCount} friend(s) from the selected folder."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LeagueClientResult
+                {
+                    Success = false,
+                    Message = $"Failed to delete friends from folder: {ex.Message}"
+                };
+            }
+        }
+        private static int? GetIntProperty(JsonElement element, string propertyName)
+        {
+            if (!element.TryGetProperty(propertyName, out JsonElement property))
+            {
+                return null;
+            }
+
+            if (property.ValueKind == JsonValueKind.Number
+                && property.TryGetInt32(out int number))
+            {
+                return number;
+            }
+
+            if (property.ValueKind == JsonValueKind.String
+                && int.TryParse(property.GetString(), out int parsedNumber))
+            {
+                return parsedNumber;
+            }
+
+            return null;
+        }
+
+        private static string? GetFriendId(JsonElement friend)
+        {
+            string? id = GetStringProperty(friend, "id");
+
+            if (!string.IsNullOrWhiteSpace(id) && id != "0")
+            {
+                return id;
+            }
+
+            string? puuid = GetStringProperty(friend, "puuid");
+
+            if (!string.IsNullOrWhiteSpace(puuid) && puuid != "0")
+            {
+                return puuid;
+            }
+
+            string? pid = GetStringProperty(friend, "pid");
+
+            if (!string.IsNullOrWhiteSpace(pid) && pid != "0")
+            {
+                return pid;
+            }
+
+            return null;
         }
     }
 }

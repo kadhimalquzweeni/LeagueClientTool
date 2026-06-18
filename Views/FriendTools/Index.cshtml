@@ -50,4 +50,50 @@
             </button>
         </form>
     </div>
+
+    <div class="form-panel">
+        <h2 class="section-title">Delete Friends From Folder</h2>
+
+        <p class="muted-text">
+            Deletes every friend inside the selected League Client folder from your friends list.
+            This does not just move them to General.
+        </p>
+
+        @if (!Model.FriendGroups.Any())
+        {
+            <p class="muted-text">
+                No custom friend folders were found.
+            </p>
+        }
+        else
+        {
+            <form asp-action="RemoveFriendsFromFolder" method="post">
+                <div class="mb-3">
+                    <label asp-for="SelectedGroupId" class="form-label">
+                        Friend Folder
+                    </label>
+
+                    <select asp-for="SelectedGroupId"
+                            class="form-control"
+                            disabled="@(!Model.IsLeagueClientRunning)">
+                        <option value="">Select a folder</option>
+
+                        @foreach (var group in Model.FriendGroups)
+                        {
+                            <option value="@group.GroupId">
+                                @group.Name
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <button type="submit"
+                        class="btn btn-danger"
+                        disabled="@(!Model.IsLeagueClientRunning)"
+                        onclick="return confirm('This will DELETE every friend in the selected folder from your friends list. Continue?');">
+                    Delete Friends In Selected Folder
+                </button>
+            </form>
+        }
+    </div>
 </div>
