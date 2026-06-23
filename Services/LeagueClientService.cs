@@ -1,4 +1,5 @@
-﻿using LoLClientTool.Mvc.Services;
+﻿using LoLClientTool.Models;
+using LoLClientTool.Mvc.Services;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -620,11 +621,11 @@ namespace LoLClientTool.Services
                 };
             }
         }
-  
-    public async Task<LeagueClientResult> SetVisibleRankAsync(
-    string queue,
-    string tier,
-    string division)
+
+        public async Task<LeagueClientResult> SetVisibleRankAsync(
+        string queue,
+        string tier,
+        string division)
         {
             LeagueClientConnection? connection = _leagueClientDetector.GetConnection();
 
@@ -780,6 +781,97 @@ namespace LoLClientTool.Services
                 };
             }
         }
-    }
+        public async Task<LeagueClientResult> ChangeRiotIdAsync(string gameName, string tagLine)
+        {
+            LeagueClientConnection? connection = _leagueClientDetector.GetConnection();
 
+            if (connection == null)
+            {
+                return new LeagueClientResult
+                {
+                    Success = false,
+                    Message = "League Client is not running, or the lockfile could not be read."
+                };
+            }
+
+            if (string.IsNullOrWhiteSpace(gameName))
+            {
+                return new LeagueClientResult
+                {
+                    Success = false,
+                    Message = "Riot ID name cannot be empty."
+                };
+            }
+
+            if (string.IsNullOrWhiteSpace(tagLine))
+            {
+                return new LeagueClientResult
+                {
+                    Success = false,
+                    Message = "Tagline cannot be empty."
+                };
+            }
+
+            try
+            {
+                using var handler = new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback =
+                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                };
+
+                using var httpClient = new HttpClient(handler);
+
+                string credentials = $"riot:{connection.Password}";
+                string encodedCredentials = Convert.ToBase64String(
+                    Encoding.ASCII.GetBytes(credentials));
+
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Basic", encodedCredentials);
+
+                string url =
+                    $"{connection.Protocol}://127.0.0.1:{connection.Port}/lol-summoner/v1/save-alias";
+
+                var payload = new
+                {
+                    gameName = gameName.Trim(),
+                    tagLine = tagLine.Trim()
+                };
+
+                string json = JsonSerializer.Serialize(payload);
+
+                using var content = new StringContent(
+                    json,
+                    Encoding.UTF8,
+                    "application/json");
+
+                HttpResponseMessage response = await httpClient.PostAsync(url, content);
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return new LeagueClientResult
+                    {
+                        Success = true,
+                        Message = $"Riot ID change request sent for {gameName.Trim()}#{tagLine.Trim()}."
+                    };
+                }
+
+                return new LeagueClientResult
+                {
+                    Success = false,
+                    Message = $"League Client rejected the Riot ID change. Status: {(int)response.StatusCode}. Response: {responseBody}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new LeagueClientResult
+                {
+                    Success = false,
+                    Message = $"Failed to change Riot ID: {ex.Message}"
+                };
+            }
+        }
+    }
 }

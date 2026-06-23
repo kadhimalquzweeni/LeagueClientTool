@@ -13,5 +13,7 @@
     string tier,
     string division);
         Task<LeagueClientResult> ClearVisibleRankAsync();
+        Task<LeagueClientResult> ChangeRiotIdAsync(string gameName, string tagLine);
     }
+
 }

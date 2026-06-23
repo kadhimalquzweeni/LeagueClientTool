@@ -1,0 +1,98 @@
+﻿@model LoLClientTool.Models.RiotIdViewModel
+
+@{
+    ViewData["Title"] = "Riot ID Changer";
+}
+
+<div class="page-shell">
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="fw-bold">Riot ID Changer</h1>
+
+            <p>
+                Change your Riot ID name and tagline using the local League Client.
+            </p>
+        </div>
+    </section>
+
+    <div class="status-panel status-panel-row">
+        <div>
+            <strong>Status:</strong> @Model.ResultMessage
+        </div>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Refresh Status
+        </a>
+    </div>
+
+    <div class="form-panel">
+        <h2 class="section-title">New Riot ID</h2>
+
+        <p class="muted-text">
+            Enter the Riot ID name and tagline you want to use. Riot may reject the change if your account is on cooldown,
+            the name is invalid, or the endpoint is unavailable.
+        </p>
+
+        <form asp-action="Change" method="post" onsubmit="return confirmRiotIdChange();">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-7">
+                    <label asp-for="GameName" class="form-label">
+                        Game Name
+                    </label>
+
+                    <input asp-for="GameName"
+                           id="gameNameInput"
+                           class="form-control"
+                           maxlength="50"
+                           placeholder="Example: Hide on bush"
+                           disabled="@(!Model.IsLeagueClientRunning)" />
+
+                    <span asp-validation-for="GameName" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-1 text-center pb-2">
+                    <span class="fw-bold fs-4">#</span>
+                </div>
+
+                <div class="col-md-4">
+                    <label asp-for="TagLine" class="form-label">
+                        Tagline
+                    </label>
+
+                    <input asp-for="TagLine"
+                           id="tagLineInput"
+                           class="form-control"
+                           maxlength="50"
+                           placeholder="Example: KR1"
+                           disabled="@(!Model.IsLeagueClientRunning)" />
+
+                    <span asp-validation-for="TagLine" class="text-danger"></span>
+                </div>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary mt-3"
+                    disabled="@(!Model.IsLeagueClientRunning)">
+                Change Riot ID
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function confirmRiotIdChange() {
+            const gameName = document.getElementById("gameNameInput").value.trim();
+            const tagLine = document.getElementById("tagLineInput").value.trim();
+
+            if (!gameName || !tagLine) {
+                alert("Please enter both a Game Name and Tagline.");
+                return false;
+            }
+
+            return confirm(`Your new Riot ID will be: ${gameName}#${tagLine}\n\nAre you sure?`);
+        }
+    </script>
+}
