@@ -16,6 +16,8 @@ builder.Services.AddScoped<ILeagueClientService, LeagueClientService>();
 builder.Services.AddHttpClient<IProfileBackgroundAssetService, ProfileBackgroundAssetService>();
 builder.Services.AddScoped<IClientToolsService, ClientToolsService>();
 builder.Services.AddScoped<IFriendToolsService, FriendToolsService>();
+builder.Services.AddHttpClient<IDataDragonService, DataDragonService>();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

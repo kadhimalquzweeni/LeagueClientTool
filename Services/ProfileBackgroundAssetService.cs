@@ -6,18 +6,20 @@ namespace LoLClientTool.Services
 {
     public class ProfileBackgroundAssetService : IProfileBackgroundAssetService
     {
-        private const string DataDragonVersion = "15.24.1";
+        private readonly HttpClient _httpClient;
+        private readonly IDataDragonService _dataDragonService;
+
         private const string Language = "en_US";
 
-        private readonly HttpClient _httpClient;
-
-        public ProfileBackgroundAssetService(HttpClient httpClient)
+        public ProfileBackgroundAssetService(HttpClient httpClient, IDataDragonService dataDragonService)
         {
             _httpClient = httpClient;
+            _dataDragonService = dataDragonService;
         }
 
         public async Task<List<ProfileBackgroundOptionViewModel>> GetBaseChampionBackgroundsAsync()
         {
+            string DataDragonVersion = await _dataDragonService.GetLatestVersionAsync();
             string url =
                 $"https://ddragon.leagueoflegends.com/cdn/{DataDragonVersion}/data/{Language}/champion.json";
 
@@ -56,6 +58,7 @@ namespace LoLClientTool.Services
 
         public async Task<List<ProfileBackgroundOptionViewModel>> GetChampionSkinsAsync(string championId)
         {
+            string DataDragonVersion = await _dataDragonService.GetLatestVersionAsync();
             string url =
                 $"https://ddragon.leagueoflegends.com/cdn/{DataDragonVersion}/data/{Language}/champion/{championId}.json";
 
@@ -68,6 +71,11 @@ namespace LoLClientTool.Services
             }
 
             return champion.Skins
+                .Where(skin =>
+                skin.Name == "default"
+                || (!string.IsNullOrWhiteSpace(skin.Name)
+                && !skin.Name.Contains('(')
+                && !skin.Name.Contains(')')))
                 .Select(skin =>
                 {
                     if (!int.TryParse(skin.Id, out int skinId))

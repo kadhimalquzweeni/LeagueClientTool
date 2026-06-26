@@ -22,7 +22,6 @@ namespace LoLProfileChanger.Mvc.Controllers
         }
 
         [HttpGet]
-        [HttpGet]
         public async Task<IActionResult> Index()
         {
             LeagueClientConnection? connection = _leagueClientDetector.GetConnection();
