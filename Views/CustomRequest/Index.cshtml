@@ -1,0 +1,117 @@
+﻿@model LoLClientTool.Models.CustomRequestViewModel
+
+@{
+    ViewData["Title"] = "Custom LCU Request";
+}
+
+<div class="page-shell">
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="fw-bold">Custom LCU Request</h1>
+
+            <p>
+                Send custom requests to the local League Client API using your current lockfile connection.
+            </p>
+        </div>
+    </section>
+
+    <div class="status-panel status-panel-row">
+        <div>
+            <strong>Status:</strong> @Model.ResultMessage
+        </div>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Refresh Status
+        </a>
+    </div>
+
+    <div class="form-panel">
+        <h2 class="section-title">Request</h2>
+
+        <p class="muted-text">
+            Enter a local LCU endpoint.
+            Do not enter the full <code>https://127.0.0.1:port</code> URL.
+        </p>
+
+        <form asp-action="Index" method="post" onsubmit="return confirmCustomRequest();">
+            <div class="mb-3">
+                <label asp-for="Method" class="form-label">Method</label>
+
+                <select asp-for="Method"
+                        id="methodInput"
+                        class="form-control"
+                        disabled="@(!Model.IsLeagueClientRunning)">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="PATCH">PATCH</option>
+                    <option value="DELETE">DELETE</option>
+                </select>
+
+                <span asp-validation-for="Method" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Endpoint" class="form-label">URL / Endpoint</label>
+
+                <input asp-for="Endpoint"
+                       id="endpointInput"
+                       class="form-control"
+                       disabled="@(!Model.IsLeagueClientRunning)" />
+
+                <span asp-validation-for="Endpoint" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Body" class="form-label">Body</label>
+
+                <textarea asp-for="Body"
+                          id="bodyInput"
+                          class="form-control status-art-box"
+                          rows="10"
+                          disabled="@(!Model.IsLeagueClientRunning)"></textarea>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary"
+                    disabled="@(!Model.IsLeagueClientRunning)">
+                Send Request
+            </button>
+        </form>
+    </div>
+
+    @if (Model.StatusCode.HasValue || !string.IsNullOrWhiteSpace(Model.ResponseBody))
+    {
+        <div class="form-panel mt-4">
+            <h2 class="section-title">Response</h2>
+
+            <p class="muted-text">
+                Status Code: <strong>@Model.StatusCode</strong>
+            </p>
+
+            <pre class="custom-response-box">@Model.ResponseBody</pre>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function confirmCustomRequest() {
+            const method = document.getElementById("methodInput").value;
+            const endpoint = document.getElementById("endpointInput").value.trim();
+
+            if (!endpoint) {
+                alert("Enter an endpoint first.");
+                return false;
+            }
+
+            if (method === "POST" || method === "PUT" || method === "PATCH" || method === "DELETE") {
+                return confirm(`Send ${method} request to:\n${endpoint}\n\nThis may change your League Client settings. Continue?`);
+            }
+
+            return true;
+        }
+    </script>
+}

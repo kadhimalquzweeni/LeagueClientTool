@@ -873,5 +873,171 @@ namespace LoLClientTool.Services
                 };
             }
         }
+        public async Task<CustomLeagueClientRequestResult> SendCustomRequestAsync(
+    string method,
+    string endpoint,
+    string? body)
+        {
+            LeagueClientConnection? connection = _leagueClientDetector.GetConnection();
+
+            if (connection == null)
+            {
+                return new CustomLeagueClientRequestResult
+                {
+                    Success = false,
+                    Message = "League Client is not running, or the lockfile could not be read.",
+                    StatusCode = 0
+                };
+            }
+
+            if (string.IsNullOrWhiteSpace(method))
+            {
+                return new CustomLeagueClientRequestResult
+                {
+                    Success = false,
+                    Message = "Request method cannot be empty.",
+                    StatusCode = 0
+                };
+            }
+
+            if (string.IsNullOrWhiteSpace(endpoint))
+            {
+                return new CustomLeagueClientRequestResult
+                {
+                    Success = false,
+                    Message = "Endpoint cannot be empty.",
+                    StatusCode = 0
+                };
+            }
+
+            endpoint = endpoint.Trim();
+
+            if (!endpoint.StartsWith("/"))
+            {
+                endpoint = "/" + endpoint;
+            }
+
+            if (endpoint.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+                || endpoint.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            {
+                return new CustomLeagueClientRequestResult
+                {
+                    Success = false,
+                    Message = "Only local LCU paths are allowed. Use /lol-example/v1/example, not a full URL.",
+                    StatusCode = 0
+                };
+            }
+
+            string normalisedMethod = method.Trim().ToUpperInvariant();
+
+            string[] allowedMethods =
+            {
+        "GET",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+    };
+
+            if (!allowedMethods.Contains(normalisedMethod))
+            {
+                return new CustomLeagueClientRequestResult
+                {
+                    Success = false,
+                    Message = "Unsupported method. Use GET, POST, PUT, PATCH, or DELETE.",
+                    StatusCode = 0
+                };
+            }
+
+            try
+            {
+                using var handler = new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback =
+                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                };
+
+                using var httpClient = new HttpClient(handler);
+
+                string credentials = $"riot:{connection.Password}";
+                string encodedCredentials = Convert.ToBase64String(
+                    Encoding.ASCII.GetBytes(credentials));
+
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", encodedCredentials);
+
+                string url =
+                    $"{connection.Protocol}://127.0.0.1:{connection.Port}{endpoint}";
+
+                using var request = new HttpRequestMessage(
+                    new HttpMethod(normalisedMethod),
+                    url);
+
+                bool methodAllowsBody =
+                    normalisedMethod == "POST"
+                    || normalisedMethod == "PUT"
+                    || normalisedMethod == "PATCH";
+
+                if (methodAllowsBody && !string.IsNullOrWhiteSpace(body))
+                {
+                    request.Content = new StringContent(
+                        body,
+                        Encoding.UTF8,
+                        "application/json");
+                }
+
+                HttpResponseMessage response = await httpClient.SendAsync(request);
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+                string formattedResponseBody = string.IsNullOrWhiteSpace(responseBody)
+                    ? $"No response body returned. HTTP {(int)response.StatusCode} {response.StatusCode}."
+                    : FormatJsonResponse(responseBody);
+
+                return new CustomLeagueClientRequestResult
+                {
+                    Success = response.IsSuccessStatusCode,
+                    StatusCode = (int)response.StatusCode,
+                    ResponseBody = formattedResponseBody,
+                    Message = response.IsSuccessStatusCode
+                        ? response.StatusCode == System.Net.HttpStatusCode.NoContent
+                            ? "Request succeeded. The League Client returned 204 No Content."
+                            : "Custom request sent successfully."
+                        : $"League Client rejected the request. Status: {(int)response.StatusCode}."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new CustomLeagueClientRequestResult
+                {
+                    Success = false,
+                    Message = $"Failed to send custom request: {ex.Message}",
+                    StatusCode = 0
+                };
+            }
+        }
+        private static string FormatJsonResponse(string responseBody)
+        {
+            if (string.IsNullOrWhiteSpace(responseBody))
+            {
+                return string.Empty;
+            }
+
+            try
+            {
+                using JsonDocument document = JsonDocument.Parse(responseBody);
+
+                return JsonSerializer.Serialize(
+                    document.RootElement,
+                    new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    });
+            }
+            catch
+            {
+                return responseBody;
+            }
+        }
+
     }
 }

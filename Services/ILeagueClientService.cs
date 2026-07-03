@@ -1,4 +1,6 @@
-﻿namespace LoLClientTool.Services
+﻿using LoLClientTool.Models;
+
+namespace LoLClientTool.Services
 {
     public interface ILeagueClientService
     {
@@ -14,6 +16,10 @@
     string division);
         Task<LeagueClientResult> ClearVisibleRankAsync();
         Task<LeagueClientResult> ChangeRiotIdAsync(string gameName, string tagLine);
+        Task<CustomLeagueClientRequestResult> SendCustomRequestAsync(
+    string method,
+    string endpoint,
+    string? body);
     }
 
 }
