@@ -56,6 +56,7 @@ namespace LoLClientTool.Controllers
                 model.TagLine ?? string.Empty);
 
             model.ResultMessage = result.Message;
+            model.ResponseBody = result.ResponseBody;
 
             return View("Index", model);
         }

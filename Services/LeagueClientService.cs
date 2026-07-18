@@ -849,19 +849,17 @@ namespace LoLClientTool.Services
 
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return new LeagueClientResult
-                    {
-                        Success = true,
-                        Message = $"Riot ID change request sent for {gameName.Trim()}#{tagLine.Trim()}."
-                    };
-                }
+                string formattedResponse = string.IsNullOrWhiteSpace(responseBody)
+                    ? "No response body returned."
+                    : FormatJsonResponse(responseBody);
 
                 return new LeagueClientResult
                 {
-                    Success = false,
-                    Message = $"League Client rejected the Riot ID change. Status: {(int)response.StatusCode}. Response: {responseBody}"
+                    Success = response.IsSuccessStatusCode,
+                    Message = response.IsSuccessStatusCode
+                    ? "Riot ID change request sent successfully. Check the response for details."
+                    : $"League Client rejected the Riot ID change. Status: {(int)response.StatusCode}.",
+                    ResponseBody = formattedResponse
                 };
             }
             catch (Exception ex)
@@ -869,7 +867,8 @@ namespace LoLClientTool.Services
                 return new LeagueClientResult
                 {
                     Success = false,
-                    Message = $"Failed to change Riot ID: {ex.Message}"
+                    Message = $"Failed to change Riot ID: {ex.Message}",
+                    ResponseBody = string.Empty
                 };
             }
         }

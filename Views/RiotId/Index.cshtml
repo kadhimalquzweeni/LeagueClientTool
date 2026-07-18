@@ -75,6 +75,14 @@
                     disabled="@(!Model.IsLeagueClientRunning)">
                 Change Riot ID
             </button>
+            @if (!string.IsNullOrWhiteSpace(Model.ResponseBody))
+            {
+                <div class="form-panel mt-4">
+                    <h2 class="section-title">Response</h2>
+
+                    <pre class="json-response">@Model.ResponseBody</pre>
+                </div>
+            }
         </form>
     </div>
 </div>
@@ -91,8 +99,6 @@
                 alert("Please enter both a Game Name and Tagline.");
                 return false;
             }
-
-            return confirm(`Your new Riot ID will be: ${gameName}#${tagLine}\n\nAre you sure?`);
         }
     </script>
 }

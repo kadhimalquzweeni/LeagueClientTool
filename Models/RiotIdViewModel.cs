@@ -13,5 +13,6 @@ namespace LoLClientTool.Models
 
         [Required(ErrorMessage = "Enter a tagline.")]
         public string? TagLine { get; set; }
+        public string? ResponseBody { get; set; }
     }
 }

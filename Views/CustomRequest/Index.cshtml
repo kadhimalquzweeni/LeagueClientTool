@@ -107,10 +107,6 @@
                 return false;
             }
 
-            if (method === "POST" || method === "PUT" || method === "PATCH" || method === "DELETE") {
-                return confirm(`Send ${method} request to:\n${endpoint}\n\nThis may change your League Client settings. Continue?`);
-            }
-
             return true;
         }
     </script>
