@@ -5,6 +5,7 @@ A local ASP.NET Core MVC web app for modifying your League of Legends profile th
 ## UI Preview
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/05729219-e553-4e7e-857b-ce3e18c08191" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/b2e9b4dd-c664-4b54-b604-ea8d79765ba2" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/6dd5ac32-d472-441b-b9b6-665264e34e58" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/60915201-3707-49d5-824f-4fec1e938c4b" />
 
 ## Prerequisites
