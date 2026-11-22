@@ -26,6 +26,72 @@
         <SolidColorBrush x:Key="SecondaryTextBrush" Color="#A6B2C2"/>
         <SolidColorBrush x:Key="MutedTextBrush" Color="#738198"/>
 
+        <!-- Theme-matched scrollbars used by ScrollViewer, ListBox and other scrolling controls. -->
+        <Style x:Key="ThemeScrollBarThumbStyle" TargetType="Thumb">
+            <Setter Property="Background" Value="#52647A"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border x:Name="ThumbBorder"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                Margin="2"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ThumbBorder" Property="Background" Value="#C89B3C"/>
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="True">
+                                <Setter TargetName="ThumbBorder" Property="Background" Value="#F0C75E"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ThumbBorder" Property="Opacity" Value="0.35"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ScrollBar">
+            <Setter Property="Width" Value="10"/>
+            <Setter Property="MinWidth" Value="10"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#52647A"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="Transparent" SnapsToDevicePixels="True">
+                            <Track x:Name="PART_Track"
+                                   Orientation="{TemplateBinding Orientation}"
+                                   IsDirectionReversed="{TemplateBinding IsDirectionReversed}">
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource ThemeScrollBarThumbStyle}"/>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Orientation" Value="Horizontal">
+                                <Setter Property="Width" Value="Auto"/>
+                                <Setter Property="MinWidth" Value="0"/>
+                                <Setter Property="Height" Value="10"/>
+                                <Setter Property="MinHeight" Value="10"/>
+                            </Trigger>
+                            <Trigger Property="Orientation" Value="Vertical">
+                                <Setter Property="Width" Value="10"/>
+                                <Setter Property="MinWidth" Value="10"/>
+                                <Setter Property="Height" Value="Auto"/>
+                                <Setter Property="MinHeight" Value="0"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="ToolCardButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#E00F172A" />
             <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}" />
