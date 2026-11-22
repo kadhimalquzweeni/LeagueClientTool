@@ -17,6 +17,10 @@
             <GradientStop Color="#F0C75E" Offset="0" />
             <GradientStop Color="#C89B3C" Offset="1" />
         </LinearGradientBrush>
+        <LinearGradientBrush x:Key="HeroBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#F20F172A" Offset="0" />
+            <GradientStop Color="#D91E293B" Offset="1" />
+        </LinearGradientBrush>
         <DropShadowEffect x:Key="PanelShadowEffect" Color="#000000" BlurRadius="24" ShadowDepth="8" Opacity="0.22" />
         <SolidColorBrush x:Key="PrimaryTextBrush" Color="#F8FAFC" />
         <SolidColorBrush x:Key="SecondaryTextBrush" Color="#94A3B8" />
