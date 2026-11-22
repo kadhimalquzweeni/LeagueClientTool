@@ -26,6 +26,7 @@ public partial class App : Application
         services.AddSingleton<ILeagueProfileService, LeagueProfileService>();
         services.AddSingleton<ILeagueCustomRequestService, LeagueCustomRequestService>();
         services.AddSingleton<IChallengeTokenService, ChallengeTokenService>();
+        services.AddSingleton<IFriendToolsService, FriendToolsService>();
 
         services.AddSingleton<MainViewModel>();
         services.AddTransient<MainWindow>();
