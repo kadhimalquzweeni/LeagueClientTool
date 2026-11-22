@@ -64,7 +64,7 @@
                         <Grid Background="Transparent" SnapsToDevicePixels="True">
                             <Track x:Name="PART_Track"
                                    Orientation="{TemplateBinding Orientation}"
-                                   IsDirectionReversed="{TemplateBinding IsDirectionReversed}">
+                                   IsDirectionReversed="True">
                                 <Track.Thumb>
                                     <Thumb Style="{StaticResource ThemeScrollBarThumbStyle}"/>
                                 </Track.Thumb>
@@ -72,6 +72,7 @@
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="Orientation" Value="Horizontal">
+                                <Setter TargetName="PART_Track" Property="IsDirectionReversed" Value="False"/>
                                 <Setter Property="Width" Value="Auto"/>
                                 <Setter Property="MinWidth" Value="0"/>
                                 <Setter Property="Height" Value="10"/>
