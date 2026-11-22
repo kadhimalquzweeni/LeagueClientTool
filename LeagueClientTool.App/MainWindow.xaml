@@ -92,8 +92,18 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl></StackPanel></ScrollViewer><ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding IsBackgroundsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"><StackPanel><StackPanel Visibility="{Binding IsChampionSelectionVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-<TextBlock Text="Champion Backgrounds" FontSize="40" FontWeight="Black" Margin="0,0,0,20"/>
-<ListBox ItemsSource="{Binding ChampionBackgrounds}" SelectedItem="{Binding SelectedChampion}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+<TextBlock Text="Champion Backgrounds" FontSize="40" FontWeight="Black" Margin="0,0,0,10"/>
+<TextBlock Text="Find a champion to browse their available splash art." FontSize="13" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,0,0,18"/>
+<Border Background="#182334" BorderBrush="#34445A" BorderThickness="1" CornerRadius="9" Padding="12" Margin="0,0,0,20" MaxWidth="560" HorizontalAlignment="Left">
+    <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+        <TextBlock Text="⌕" FontSize="21" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+        <TextBox Grid.Column="1" Text="{Binding ChampionSearchText, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" BorderThickness="0" Foreground="{StaticResource PrimaryTextBrush}" FontSize="14" Padding="2,5" VerticalContentAlignment="Center" ToolTip="Search champions by name"/>
+        <Button Grid.Column="2" Content="Clear" Command="{Binding ClearChampionSearchCommand}" Padding="10,5" Margin="10,0,0,0" Background="#29364A" Foreground="{StaticResource SecondaryTextBrush}"/>
+    </Grid>
+</Border>
+<TextBlock Text="No champions match your search. Try another name." FontSize="14" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,0,0,18" Visibility="{Binding HasNoChampionSearchResults, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+<ListBox ItemsSource="{Binding FilteredChampionBackgrounds}" SelectedItem="{Binding SelectedChampion}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
 <ListBox.Template><ControlTemplate TargetType="{x:Type ListBox}"><Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"><ItemsPresenter/></Border></ControlTemplate></ListBox.Template>
 <ListBox.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ListBox.ItemsPanel>
 <ListBox.ItemContainerStyle><Style TargetType="ListBoxItem"><Setter Property="Padding" Value="12"/><Setter Property="Margin" Value="0,0,16,16"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListBoxItem"><Border x:Name="ChampionCard" Background="#BF0F172A" BorderBrush="#FFDDDDDD" BorderThickness="1" CornerRadius="8" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="ChampionCard" Property="RenderTransform"><Setter.Value><TranslateTransform Y="-3"/></Setter.Value></Setter><Setter TargetName="ChampionCard" Property="Effect" Value="{StaticResource PanelShadowEffect}"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter></Style></ListBox.ItemContainerStyle>
