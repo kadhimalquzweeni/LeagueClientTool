@@ -217,7 +217,7 @@
                                             <Border Background="#11151D" BorderBrush="#292F3D" BorderThickness="1" CornerRadius="8" Padding="8" Margin="0,0,8,8">
                                                 <StackPanel Width="82">
                                                     <Image Source="{Binding ImageUrl}" Width="64" Height="64" Stretch="Uniform" />
-                                                    <TextBlock Text="{Binding IconId, StringFormat=ID {0}}" FontSize="10" Foreground="{StaticResource SecondaryTextBrush}" HorizontalAlignment="Center" Margin="0,5,0,5" />
+                                                    <TextBlock Text="{Binding IconId}" FontSize="10" Foreground="{StaticResource SecondaryTextBrush}" HorizontalAlignment="Center" Margin="0,5,0,5" />
                                                     <Button Content="Set" Padding="8,5"
                                                             Command="{Binding DataContext.SetProfileIconCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                             CommandParameter="{Binding IconId}" />
