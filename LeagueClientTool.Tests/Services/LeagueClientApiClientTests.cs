@@ -75,6 +75,90 @@ public sealed class LeagueClientApiClientTests
         Assert.Equal(TimeSpan.FromSeconds(10), httpClient.Timeout);
     }
 
+    [Fact]
+    public async Task SendAsync_PutSendsJsonBodyAndReturnsStatusAndBody()
+    {
+        var handler = new StubHttpMessageHandler(request =>
+        {
+            Assert.Equal(HttpMethod.Put, request.Method);
+            Assert.Equal("/lol-summoner/v1/current-summoner/icon", request.RequestUri!.AbsolutePath);
+            Assert.Equal("application/json", request.Content!.Headers.ContentType!.MediaType);
+            Assert.Equal("{\\"profileIconId\\":12}", request.Content.ReadAsStringAsync().GetAwaiter().GetResult());
+
+            return new HttpResponseMessage(HttpStatusCode.NoContent)
+            {
+                Content = new StringContent(string.Empty)
+            };
+        });
+        using var httpClient = new HttpClient(handler)
+        {
+            BaseAddress = new Uri("https://127.0.0.1:54321/")
+        };
+        using var apiClient = new LeagueClientApiClient(httpClient);
+
+        var result = await apiClient.SendAsync(
+            HttpMethod.Put,
+            "/lol-summoner/v1/current-summoner/icon",
+            "{\\"profileIconId\\":12}");
+
+        Assert.Equal(204, result.StatusCode);
+        Assert.True(result.IsSuccessStatusCode);
+        Assert.Equal(string.Empty, result.Body);
+    }
+
+    [Theory]
+    [InlineData("https://example.com/path")]
+    [InlineData("//example.com/path")]
+    [InlineData("/lol-client/../secrets")]
+    [InlineData("/lol-client\\\\secrets")]
+    [InlineData("/lol-client/path#fragment")]
+    public async Task SendAsync_UnsafeEndpointIsRejected(string endpoint)
+    {
+        using var httpClient = new HttpClient(new StubHttpMessageHandler(
+            _ => throw new InvalidOperationException("No request should be sent.")))
+        {
+            BaseAddress = new Uri("https://127.0.0.1:54321/")
+        };
+        using var apiClient = new LeagueClientApiClient(httpClient);
+
+        await Assert.ThrowsAsync<ArgumentException>(
+            () => apiClient.SendAsync(HttpMethod.Get, endpoint));
+    }
+
+    [Fact]
+    public async Task SendAsync_UnsupportedMethodIsRejected()
+    {
+        using var httpClient = new HttpClient(new StubHttpMessageHandler(
+            _ => throw new InvalidOperationException("No request should be sent.")))
+        {
+            BaseAddress = new Uri("https://127.0.0.1:54321/")
+        };
+        using var apiClient = new LeagueClientApiClient(httpClient);
+
+        await Assert.ThrowsAsync<ArgumentException>(
+            () => apiClient.SendAsync(new HttpMethod("TRACE"), "/lol-summoner/v1/current-summoner"));
+    }
+
+    [Fact]
+    public async Task SendAsync_NonSuccessStatusIsReturnedWithoutThrowing()
+    {
+        using var httpClient = new HttpClient(new StubHttpMessageHandler(
+            _ => new HttpResponseMessage(HttpStatusCode.BadRequest)
+            {
+                Content = new StringContent("invalid payload")
+            }))
+        {
+            BaseAddress = new Uri("https://127.0.0.1:54321/")
+        };
+        using var apiClient = new LeagueClientApiClient(httpClient);
+
+        var result = await apiClient.SendAsync(HttpMethod.Post, "/lol-summoner/v1/current-summoner");
+
+        Assert.Equal(400, result.StatusCode);
+        Assert.False(result.IsSuccessStatusCode);
+        Assert.Equal("invalid payload", result.Body);
+    }
+
     private sealed class StubHttpMessageHandler(
         Func<HttpRequestMessage, HttpResponseMessage> responseFactory) : HttpMessageHandler
     {
