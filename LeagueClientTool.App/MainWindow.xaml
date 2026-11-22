@@ -190,8 +190,8 @@
                                 <TextBlock Text="PROFILE BANNER &amp; CHALLENGE TOKENS" FontSize="15" FontWeight="Bold" Margin="0,0,0,12" />
                                 <WrapPanel>
                                     <Button Content="Set last-rank banner" Command="{Binding SetLastRankBannerCommand}" Margin="0,0,8,8" />
-                                    <Button Content="Clear challenge tokens" Command="{Binding ClearChallengeTokensCommand}" Margin="0,0,8,8" />
-                                    <Button Content="Copy first token to all slots" Command="{Binding CopyFirstChallengeTokenCommand}" Margin="0,0,8,8" />
+                                    <Button Content="Clear challenge tokens" Click="OnClearChallengeTokensClick" Margin="0,0,8,8" />
+                                    <Button Content="Copy first token to all slots" Click="OnCopyFirstChallengeTokenClick" Margin="0,0,8,8" />
                                 </WrapPanel>
                             </StackPanel>
                         </Border>
@@ -250,8 +250,8 @@
                                 <TextBlock Text="FRIEND REQUESTS" FontSize="15" FontWeight="Bold" Margin="0,0,0,8" />
                                 <TextBlock Text="Accept incoming requests or clear all pending requests." FontSize="12" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,0,0,14" />
                                 <WrapPanel>
-                                    <Button Content="Accept all requests" Command="{Binding AcceptAllFriendRequestsCommand}" Margin="0,0,8,8" />
-                                    <Button Content="Delete all requests" Command="{Binding DeleteAllFriendRequestsCommand}" Margin="0,0,8,8" />
+                                    <Button Content="Accept all requests" Click="OnAcceptAllFriendRequestsClick" Margin="0,0,8,8" />
+                                    <Button Content="Delete all requests" Click="OnDeleteAllFriendRequestsClick" Margin="0,0,8,8" />
                                     <Button Content="Refresh folders" Command="{Binding LoadFriendGroupsCommand}" Margin="0,0,8,8" />
                                 </WrapPanel>
                             </StackPanel>
@@ -261,7 +261,7 @@
                                 <TextBlock Text="DELETE FRIENDS FROM FOLDER" FontSize="15" FontWeight="Bold" Margin="0,0,0,8" />
                                 <TextBlock Text="This permanently removes friends in the selected folder from your friends list." FontSize="12" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,0,0,14" />
                                 <ComboBox ItemsSource="{Binding FriendGroups}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedFriendGroup}" />
-                                <Button Content="Delete friends in selected folder" Command="{Binding DeleteFriendsFromSelectedGroupCommand}" HorizontalAlignment="Left" Margin="0,12,0,0" />
+                                <Button Content="Delete friends in selected folder" Click="OnDeleteFriendsFromSelectedGroupClick" HorizontalAlignment="Left" Margin="0,12,0,0" />
                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -288,7 +288,7 @@
                             <StackPanel>
                                 <TextBlock Text="LEAGUE CLIENT UI" FontSize="15" FontWeight="Bold" Margin="0,0,0,8" />
                                 <TextBlock Text="Restart the League client interface without closing the game process." FontSize="12" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,0,0,14" />
-                                <Button Content="Restart League UX" Command="{Binding RestartLeagueUxCommand}" HorizontalAlignment="Left" />
+                                <Button Content="Restart League UX" Click="OnRestartLeagueUxClick" HorizontalAlignment="Left" />
                             </StackPanel>
                         </Border>
                     </StackPanel>
