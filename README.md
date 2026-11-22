@@ -72,3 +72,15 @@ The WPF application targets `net10.0-windows`. The Core project remains independ
 - `LeagueClientTool.App` — WPF UI, navigation, MVVM view models and dependency injection.
 - `LeagueClientTool.Core` — lockfile detection, authenticated LCU client, profile, challenge, friend and Data Dragon services.
 - `LeagueClientTool.Tests` — xUnit tests for Core parsing, API requests and feature services.
+
+## Publish a standalone Windows build
+
+Visual Studio can use the `Windows-x64` publish profile under `LeagueClientTool.App/Properties/PublishProfiles`.
+
+To publish from the command line:
+
+```powershell
+dotnet publish LeagueClientTool.App/LeagueClientTool.App.csproj --configuration Release --runtime win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:PublishTrimmed=false --output ./publish
+```
+
+Creating a version tag such as `v1.0.0` runs the Windows release workflow. It restores and tests the solution, publishes the self-contained x64 application, and attaches a ZIP to the GitHub release.
