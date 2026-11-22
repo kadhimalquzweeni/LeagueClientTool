@@ -65,6 +65,7 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty] private string pageTitle = "Overview";
     [ObservableProperty] private string pageDescription = "Your League Client Tool dashboard.";
     [ObservableProperty] private bool isDashboardVisible = true;
+    [ObservableProperty] private bool isPageHeroVisible = true;
     [ObservableProperty] private bool isIconsVisible;
     [ObservableProperty] private bool isBackgroundsVisible;
     [ObservableProperty] private bool isStatusVisible;
@@ -395,6 +396,7 @@ public sealed partial class MainViewModel : ObservableObject
         PageDescription = value.Key == "home"
             ? "A local desktop tool for customising your League Client profile. Change your profile icon, browse champion backgrounds, and set profile backgrounds from a clean desktop interface."
             : value.Description;
+        IsPageHeroVisible = value.Key != "backgrounds";
         IsDashboardVisible = value.Key == "home";
         IsIconsVisible = value.Key == "icons";
         IsBackgroundsVisible = value.Key == "backgrounds";
