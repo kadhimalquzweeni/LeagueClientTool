@@ -9,5 +9,12 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         DataContext = viewModel;
+        Loaded += OnLoaded;
+    }
+
+    private async void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        Loaded -= OnLoaded;
+        await ((MainViewModel)DataContext).RefreshConnectionCommand.ExecuteAsync(null);
     }
 }

@@ -1,5 +1,7 @@
 using System.Windows;
 using LeagueClientTool.App.ViewModels;
+using LeagueClientTool.Core.Interfaces;
+using LeagueClientTool.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LeagueClientTool.App;
@@ -13,6 +15,12 @@ public partial class App : Application
         base.OnStartup(e);
 
         var services = new ServiceCollection();
+
+        services.AddSingleton<ILeagueClientProcessLocator, SystemLeagueClientProcessLocator>();
+        services.AddSingleton<ILockfileReader, SystemLockfileReader>();
+        services.AddSingleton<ILeagueClientDetector, LeagueClientDetector>();
+        services.AddSingleton<ILeagueClientApiClientFactory, LeagueClientApiClientFactory>();
+
         services.AddSingleton<MainViewModel>();
         services.AddTransient<MainWindow>();
 

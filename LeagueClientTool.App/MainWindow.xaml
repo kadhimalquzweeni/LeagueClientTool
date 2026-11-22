@@ -92,7 +92,7 @@
                                    Foreground="{StaticResource MutedTextBrush}" />
                         <StackPanel Orientation="Horizontal" Margin="0,11,0,0">
                             <Ellipse Width="8" Height="8" Fill="#E5A94B" VerticalAlignment="Center" />
-                            <TextBlock Text="Not connected" Margin="9,0,0,0" FontSize="12"
+                            <TextBlock Text="{Binding ClientStatus}" Margin="9,0,0,0" FontSize="12"
                                        Foreground="{StaticResource SecondaryTextBrush}" />
                         </StackPanel>
                     </StackPanel>
@@ -106,7 +106,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <DockPanel Margin="0,0,0,28">
+            <DockPanel Margin="0,0,0,28">\n                <Button DockPanel.Dock="Right" Content="Refresh connection" Command="{Binding RefreshConnectionCommand}" VerticalAlignment="Center" Margin="16,0,0,0" />
                 <StackPanel DockPanel.Dock="Left">
                     <TextBlock Text="{Binding PageTitle}" FontSize="27" FontWeight="Bold" />
                     <TextBlock Text="{Binding PageDescription}" Margin="0,5,0,0"
@@ -117,7 +117,7 @@
                         VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
                         <Ellipse Width="7" Height="7" Fill="#E5A94B" VerticalAlignment="Center" />
-                        <TextBlock Text="CLIENT OFFLINE" Margin="8,0,0,0" FontSize="10"
+                        <TextBlock Text="{Binding ClientStatus}" Margin="8,0,0,0" FontSize="10"
                                    FontWeight="Bold" Foreground="{StaticResource SecondaryTextBrush}" />
                     </StackPanel>
                 </Border>
@@ -167,10 +167,10 @@
                                                Foreground="{StaticResource SecondaryTextBrush}" />
                                     <StackPanel Orientation="Horizontal" Margin="0,16,0,8">
                                         <Ellipse Width="9" Height="9" Fill="#E5A94B" VerticalAlignment="Center" />
-                                        <TextBlock Text="Waiting for League Client" FontSize="15"
+                                        <TextBlock Text="{Binding ClientStatus}" FontSize="15"
                                                    FontWeight="SemiBold" Margin="9,0,0,0" />
                                     </StackPanel>
-                                    <TextBlock Text="Open the League of Legends client to connect."
+                                    <TextBlock Text="{Binding ConnectionDetails}"
                                                FontSize="11" Foreground="{StaticResource SecondaryTextBrush}"
                                                TextWrapping="Wrap" />
                                 </StackPanel>
