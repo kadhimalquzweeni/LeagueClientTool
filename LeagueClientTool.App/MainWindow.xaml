@@ -150,7 +150,7 @@
                 </ScrollViewer>
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding IsProfileVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <StackPanel>
+                    <StackPanel IsEnabled="{Binding IsClientConnected}">
                         <Border Background="{StaticResource PanelBackgroundBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1" CornerRadius="12" Padding="20" Margin="0,0,0,14">
                             <StackPanel>
                                 <TextBlock Text="RIOT ID" FontSize="15" FontWeight="Bold" Margin="0,0,0,12" />
@@ -220,7 +220,8 @@
                                                     <TextBlock Text="{Binding IconId}" FontSize="10" Foreground="{StaticResource SecondaryTextBrush}" HorizontalAlignment="Center" Margin="0,5,0,5" />
                                                     <Button Content="Set" Padding="8,5"
                                                             Command="{Binding DataContext.SetProfileIconCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                            CommandParameter="{Binding IconId}" />
+                                                            CommandParameter="{Binding IconId}"
+                                                            IsEnabled="{Binding DataContext.IsClientConnected, RelativeSource={RelativeSource AncestorType=Window}}" />
                                                 </StackPanel>
                                             </Border>
                                         </DataTemplate>
@@ -237,14 +238,14 @@
                                 <ComboBox ItemsSource="{Binding ChampionSkins}" DisplayMemberPath="SkinName" SelectedItem="{Binding SelectedSkin}" />
                                 <Image Source="{Binding SelectedSkin.ImageUrl}" Height="190" Stretch="UniformToFill" Margin="0,12,0,8" />
                                 <TextBlock Text="{Binding SelectedSkin.ImageUrl, TargetNullValue=Choose a champion and skin}" TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,0,0,12" />
-                                <Button Content="Apply selected background" Command="{Binding SetProfileBackgroundCommand}" HorizontalAlignment="Left" />
+                                <Button Content="Apply selected background" Command="{Binding SetProfileBackgroundCommand}" IsEnabled="{Binding IsClientConnected}" HorizontalAlignment="Left" />
                             </StackPanel>
                         </Border>
                     </StackPanel>
                 </ScrollViewer>
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding IsFriendsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <StackPanel>
+                    <StackPanel IsEnabled="{Binding IsClientConnected}">
                         <Border Background="{StaticResource PanelBackgroundBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1" CornerRadius="12" Padding="20" Margin="0,0,0,14">
                             <StackPanel>
                                 <TextBlock Text="FRIEND REQUESTS" FontSize="15" FontWeight="Bold" Margin="0,0,0,8" />
@@ -268,7 +269,7 @@
                 </ScrollViewer>
 
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding IsToolsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <StackPanel>
+                    <StackPanel IsEnabled="{Binding IsClientConnected}">
                         <Border Background="{StaticResource PanelBackgroundBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1" CornerRadius="12" Padding="20" Margin="0,0,0,14">
                             <StackPanel>
                                 <TextBlock Text="CUSTOM LCU REQUEST" FontSize="15" FontWeight="Bold" Margin="0,0,0,8" />

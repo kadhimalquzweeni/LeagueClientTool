@@ -12,6 +12,7 @@ public sealed class ChallengeTokenService(
     ILeagueClientApiClientFactory apiClientFactory) : IChallengeTokenService
 {
     private const string PreferencesEndpoint = "/lol-challenges/v1/update-player-preferences/";
+    private const string ClearPreferencesEndpoint = "/lol-challenges/v1/update-player-preferences";
     private const string SummaryEndpoint = "/lol-challenges/v1/summary-player-data/local-player";
 
     public async Task<LeagueClientOperationResult> ClearAsync(
@@ -19,6 +20,7 @@ public sealed class ChallengeTokenService(
     {
         return await SendPreferencesAsync(
             new { challengeIds = Array.Empty<int>() },
+            ClearPreferencesEndpoint,
             "Challenge tokens cleared successfully. You may need to refresh or restart the League Client to see the change.",
             cancellationToken);
     }
@@ -111,6 +113,7 @@ public sealed class ChallengeTokenService(
 
     private async Task<LeagueClientOperationResult> SendPreferencesAsync(
         object payload,
+        string endpoint,
         string successMessage,
         CancellationToken cancellationToken)
     {
@@ -123,7 +126,7 @@ public sealed class ChallengeTokenService(
         using ILeagueClientApiClient api = apiClientFactory.Create(connection);
         LeagueClientApiResponse response = await api.SendAsync(
             HttpMethod.Post,
-            PreferencesEndpoint,
+            endpoint,
             JsonSerializer.Serialize(payload),
             cancellationToken);
 

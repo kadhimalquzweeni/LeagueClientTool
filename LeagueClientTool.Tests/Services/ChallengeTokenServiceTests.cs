@@ -15,7 +15,7 @@ public sealed class ChallengeTokenServiceTests
 
         Assert.True(result.Success);
         Assert.Equal(HttpMethod.Post, fixture.Api.LastMethod);
-        Assert.Equal("/lol-challenges/v1/update-player-preferences/", fixture.Api.LastEndpoint);
+        Assert.Equal("/lol-challenges/v1/update-player-preferences", fixture.Api.LastEndpoint);
         Assert.Empty(JsonDocument.Parse(fixture.Api.LastBody!).RootElement.GetProperty("challengeIds").EnumerateArray());
     }
 
