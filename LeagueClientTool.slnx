@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="LeagueClientTool.App/LeagueClientTool.App.csproj" />
+  <Project Path="LeagueClientTool.Core/LeagueClientTool.Core.csproj" />
+  <Project Path="LeagueClientTool.Tests/LeagueClientTool.Tests.csproj" />
+</Solution>
