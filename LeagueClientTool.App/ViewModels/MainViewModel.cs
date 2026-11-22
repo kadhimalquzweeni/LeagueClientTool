@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LeagueClientTool.Core.Interfaces;
 using LeagueClientTool.Core.Models;
+using LeagueClientTool.Core.Services;
 
 namespace LeagueClientTool.App.ViewModels;
 
@@ -58,6 +59,7 @@ public sealed partial class MainViewModel : ObservableObject
     public ObservableCollection<string> RequestMethods { get; } = ["GET", "POST", "PUT", "PATCH", "DELETE"];
 
     public ObservableCollection<ChampionBackground> ChampionBackgrounds { get; } = [];
+    public ObservableCollection<ChampionBackground> FilteredChampionBackgrounds { get; } = [];
     public ObservableCollection<ChampionSkin> ChampionSkins { get; } = [];
     public ObservableCollection<FriendGroup> FriendGroups { get; } = [];
 
@@ -99,6 +101,8 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty] private string visibleRankDivision = "IV";
     [ObservableProperty] private bool isChampionSelectionVisible = true;
     [ObservableProperty] private bool isSkinGalleryVisible;
+    [ObservableProperty] private string championSearchText = string.Empty;
+    [ObservableProperty] private bool hasNoChampionSearchResults;
     [ObservableProperty] private ChampionBackground? selectedChampion;
     [ObservableProperty] private ChampionSkin? selectedSkin;
     [ObservableProperty] private FriendGroup? selectedFriendGroup;
@@ -278,6 +282,7 @@ public sealed partial class MainViewModel : ObservableObject
             var backgrounds = await _dataDragonService.GetChampionBackgroundsAsync();
             ChampionBackgrounds.Clear();
             foreach (var background in backgrounds) ChampionBackgrounds.Add(background);
+            UpdateChampionSearchResults();
             OperationMessage = $"Loaded {ChampionBackgrounds.Count} champion backgrounds.";
 
         }
@@ -418,6 +423,21 @@ public sealed partial class MainViewModel : ObservableObject
         }
         if (IsFriendsVisible) _ = LoadFriendGroupsAsync();
     }
+
+    partial void OnChampionSearchTextChanged(string value) => UpdateChampionSearchResults();
+
+    private void UpdateChampionSearchResults()
+    {
+        var results = ChampionBackgroundFilter.Filter(ChampionBackgrounds, ChampionSearchText);
+        FilteredChampionBackgrounds.Clear();
+        foreach (var champion in results)
+            FilteredChampionBackgrounds.Add(champion);
+
+        HasNoChampionSearchResults = ChampionBackgrounds.Count > 0 && results.Count == 0;
+    }
+
+    [RelayCommand]
+    private void ClearChampionSearch() => ChampionSearchText = string.Empty;
 
     partial void OnSelectedChampionChanged(ChampionBackground? value)
     {
