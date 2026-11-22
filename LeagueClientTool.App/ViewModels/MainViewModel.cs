@@ -24,16 +24,16 @@ public sealed partial class MainViewModel : ObservableObject
     [
         new("home", "Home", "⌂", "A local desktop tool for customising your League Client profile."),
         new("privacy", "Privacy", "☷", "Application information and connection details."),
-        new("icons", "Profile Icons", "◉", "Browse available profile icons and set one directly through your local League Client."),
+        new("icons", "Profile Icons", "◉", "Choose a profile icon and apply it directly to your local League Client. You can also enter an icon ID manually."),
         new("backgrounds", "Backgrounds", "✧", "Browse champions, view their skins, and set a splash art as your profile background."),
-        new("status", "Status", "✎", "Update your League Client status message."),
-        new("tokens", "Tokens", "◇", "Clear challenge tokens or copy the first token across all slots."),
-        new("banner", "Banner", "▣", "Set your League profile banner accent."),
+        new("status", "Status", "✎", "Update the status message shown on your League Client profile and friends list."),
+        new("tokens", "Tokens", "◇", "Clear the Challenge Tokens displayed on your League profile banner."),
+        new("banner", "Banner", "▣", "Change the banner accent shown on your League profile."),
         new("rank", "Visible Rank", "★", "Change the rank displayed in League chat and your friends list."),
-        new("client", "Client Tools", "⚙", "Restart the League Client interface."),
-        new("friends", "Friend Tools", "♧", "Accept or delete friend requests and manage friend folders."),
+        new("client", "Client Tools", "⚙", "Utility tools for fixing or refreshing the League Client interface."),
+        new("friends", "Friend Tools", "♧", "Manage League friend requests from one local desktop interface."),
         new("riotid", "Riot Id Changer", "✎", "Change your Riot ID name and tagline using the local League Client."),
-        new("request", "Custom LCU Request", "⌘", "Send custom requests to the local League Client API.")
+        new("request", "Custom LCU Request", "⌘", "Send custom requests to the local League Client API using your current lockfile connection.")
     ];
 
     public ObservableCollection<ProfileIconOption> AvailableProfileIcons { get; } =
