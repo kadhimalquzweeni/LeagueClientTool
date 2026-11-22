@@ -84,7 +84,6 @@ public sealed class LeagueProfileService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(queue);
         ArgumentException.ThrowIfNullOrWhiteSpace(tier);
-        ArgumentException.ThrowIfNullOrWhiteSpace(division);
 
         return SendAsync(
             HttpMethod.Put,

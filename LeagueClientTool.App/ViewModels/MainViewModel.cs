@@ -217,19 +217,19 @@ public sealed partial class MainViewModel : ObservableObject
 
     [RelayCommand]
     private async Task ClearVisibleRankAsync() =>
-        await RunProfileActionAsync(_profileService.ClearVisibleRankAsync);
+        await RunProfileActionAsync(() => _profileService.ClearVisibleRankAsync());
 
     [RelayCommand]
     private async Task SetLastRankBannerAsync() =>
-        await RunProfileActionAsync(_profileService.SetLastRankBannerAsync);
+        await RunProfileActionAsync(() => _profileService.SetLastRankBannerAsync());
 
     [RelayCommand]
     private async Task ClearChallengeTokensAsync() =>
-        await RunProfileActionAsync(_challengeTokenService.ClearAsync);
+        await RunProfileActionAsync(() => _challengeTokenService.ClearAsync());
 
     [RelayCommand]
     private async Task CopyFirstChallengeTokenAsync() =>
-        await RunProfileActionAsync(_challengeTokenService.CopyFirstTokenToAllSlotsAsync);
+        await RunProfileActionAsync(() => _challengeTokenService.CopyFirstTokenToAllSlotsAsync());
 
     [RelayCommand]
     private async Task LoadChampionBackgroundsAsync()
@@ -270,11 +270,11 @@ public sealed partial class MainViewModel : ObservableObject
 
     [RelayCommand]
     private async Task AcceptAllFriendRequestsAsync() =>
-        await RunProfileActionAsync(_friendToolsService.AcceptAllFriendRequestsAsync);
+        await RunProfileActionAsync(() => _friendToolsService.AcceptAllFriendRequestsAsync());
 
     [RelayCommand]
     private async Task DeleteAllFriendRequestsAsync() =>
-        await RunProfileActionAsync(_friendToolsService.DeleteAllFriendRequestsAsync);
+        await RunProfileActionAsync(() => _friendToolsService.DeleteAllFriendRequestsAsync());
 
     [RelayCommand]
     private async Task DeleteFriendsFromSelectedGroupAsync()
