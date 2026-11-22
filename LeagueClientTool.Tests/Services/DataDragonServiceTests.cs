@@ -13,7 +13,7 @@ public sealed class DataDragonServiceTests
         using var client = CreateClient(_ =>
         {
             requestCount++;
-            return JsonResponse("[\\"16.22.1\\",\\"16.21.1\\"]");
+            return JsonResponse("[\"16.22.1\",\"16.21.1\"]");
         });
         var service = new DataDragonService(client);
 
@@ -44,7 +44,7 @@ public sealed class DataDragonServiceTests
         {
             if (request.RequestUri!.AbsoluteUri.Contains("/api/versions.json"))
             {
-                return JsonResponse("[\\"16.22.1\\"]");
+                return JsonResponse("[\"16.22.1\"]");
             }
 
             return JsonResponse("""
@@ -74,7 +74,7 @@ public sealed class DataDragonServiceTests
         {
             if (request.RequestUri!.AbsoluteUri.Contains("/api/versions.json"))
             {
-                return JsonResponse("[\\"16.22.1\\"]");
+                return JsonResponse("[\"16.22.1\"]");
             }
 
             return JsonResponse("""
