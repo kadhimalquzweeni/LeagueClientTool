@@ -24,6 +24,8 @@ public partial class App : Application
         services.AddSingleton(_ => new HttpClient { Timeout = TimeSpan.FromSeconds(20) });
         services.AddSingleton<IDataDragonService, DataDragonService>();
         services.AddSingleton<ILeagueProfileService, LeagueProfileService>();
+        services.AddSingleton<ILeagueCustomRequestService, LeagueCustomRequestService>();
+        services.AddSingleton<IChallengeTokenService, ChallengeTokenService>();
 
         services.AddSingleton<MainViewModel>();
         services.AddTransient<MainWindow>();
