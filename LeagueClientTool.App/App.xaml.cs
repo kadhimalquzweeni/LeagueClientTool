@@ -23,6 +23,7 @@ public partial class App : Application
         services.AddSingleton<ILeagueClientApiClientFactory, LeagueClientApiClientFactory>();
         services.AddSingleton(_ => new HttpClient { Timeout = TimeSpan.FromSeconds(20) });
         services.AddSingleton<IDataDragonService, DataDragonService>();
+        services.AddSingleton<ILeagueProfileService, LeagueProfileService>();
 
         services.AddSingleton<MainViewModel>();
         services.AddTransient<MainWindow>();
