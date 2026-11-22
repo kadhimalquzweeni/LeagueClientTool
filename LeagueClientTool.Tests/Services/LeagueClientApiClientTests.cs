@@ -110,6 +110,8 @@ public sealed class LeagueClientApiClientTests
     [InlineData("https://example.com/path")]
     [InlineData("//example.com/path")]
     [InlineData("/lol-client/../secrets")]
+    [InlineData("/lol-client/%2e%2e/secrets")]
+    [InlineData("/lol-client/%2F..%2Fsecrets")]
     [InlineData("/lol-client\\\\secrets")]
     [InlineData("/lol-client/path#fragment")]
     public async Task SendAsync_UnsafeEndpointIsRejected(string endpoint)

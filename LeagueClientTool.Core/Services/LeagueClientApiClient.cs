@@ -78,7 +78,8 @@ public sealed class LeagueClientApiClient(HttpClient httpClient) : ILeagueClient
         }
 
         string path = endpoint.Split('?', 2)[0];
-        if (path.Split('/').Any(segment => segment is "." or ".."))
+        string decodedPath = Uri.UnescapeDataString(path);
+        if (decodedPath.Split('/').Any(segment => segment is "." or ".."))
         {
             throw new ArgumentException(
                 "The endpoint cannot contain path traversal segments.",
