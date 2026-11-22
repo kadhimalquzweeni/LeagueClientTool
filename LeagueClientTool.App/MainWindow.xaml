@@ -14,9 +14,12 @@
                                     <TextBox Text="{Binding ProfileIconIdInput, UpdateSourceTrigger=PropertyChanged}" Width="140" Margin="0,0,8,0" />
                                     <Button Grid.Column="1" Content="Set profile icon" Command="{Binding SetProfileIconCommand}" IsEnabled="{Binding IsClientConnected}" />
                                 </Grid>
-                                <TextBlock Text="Profile Icons 50–78" FontSize="24" FontWeight="Black" Margin="0,24,0,8" />
-                                <TextBlock Text="Click Set under an icon to apply it to your League profile. These are only visible on websites like OP.GG &amp; U.GG." FontSize="12" Foreground="{StaticResource SecondaryTextBrush}" TextWrapping="Wrap" Margin="0,0,0,12" />
-                                <ItemsControl ItemsSource="{Binding AvailableProfileIcons}" Margin="0,16,0,0">
+                            </StackPanel>
+                        </Border>
+                        <Separator Margin="0,28,0,28" Background="{StaticResource PanelBorderBrush}" />
+                        <TextBlock Text="Profile Icons 50–78" FontSize="32" FontWeight="Black" Margin="0,0,0,8" />
+                        <TextBlock Text="Click Set under an icon to apply it to your League profile. These are only visible on websites like OP.GG &amp; U.GG." FontSize="14" Foreground="{StaticResource SecondaryTextBrush}" TextWrapping="Wrap" Margin="0,0,0,12" />
+                        <ItemsControl ItemsSource="{Binding AvailableProfileIcons}" Margin="0,8,0,0">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
                                     </ItemsControl.ItemsPanel>
@@ -34,9 +37,7 @@
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </Border></StackPanel></ScrollViewer><ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding IsBackgroundsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"><StackPanel><Border Background="{StaticResource PanelBackgroundBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1" CornerRadius="14" Padding="17" Margin="0,0,0,18"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="LEAGUE CLIENT STATUS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource SecondaryTextBrush}"/><TextBlock Text="{Binding ClientStatus}" FontSize="17" FontWeight="Bold" Foreground="{StaticResource AccentLightBrush}" Margin="0,5,0,2"/><TextBlock Text="{Binding ConnectionDetails}" FontSize="11" Foreground="{StaticResource SecondaryTextBrush}" TextWrapping="Wrap"/></StackPanel><Button Grid.Column="1" Content="Refresh Status" Command="{Binding RefreshConnectionCommand}" VerticalAlignment="Center" Margin="12,0,0,0"/></Grid></Border><StackPanel Visibility="{Binding IsChampionSelectionVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                </ItemsControl></StackPanel></ScrollViewer><ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding IsBackgroundsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"><StackPanel><Border Background="{StaticResource PanelBackgroundBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1" CornerRadius="14" Padding="17" Margin="0,0,0,18"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="LEAGUE CLIENT STATUS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource SecondaryTextBrush}"/><TextBlock Text="{Binding ClientStatus}" FontSize="17" FontWeight="Bold" Foreground="{StaticResource AccentLightBrush}" Margin="0,5,0,2"/><TextBlock Text="{Binding ConnectionDetails}" FontSize="11" Foreground="{StaticResource SecondaryTextBrush}" TextWrapping="Wrap"/></StackPanel><Button Grid.Column="1" Content="Refresh Status" Command="{Binding RefreshConnectionCommand}" VerticalAlignment="Center" Margin="12,0,0,0"/></Grid></Border><StackPanel Visibility="{Binding IsChampionSelectionVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
 <TextBlock Text="Champion Backgrounds" FontSize="40" FontWeight="Black" Margin="0,0,0,20"/>
 <ListBox ItemsSource="{Binding ChampionBackgrounds}" SelectedItem="{Binding SelectedChampion}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
 <ListBox.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ListBox.ItemsPanel>
