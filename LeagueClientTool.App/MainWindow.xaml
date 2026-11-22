@@ -206,7 +206,7 @@
                                 <TextBlock Text="Choose one of the classic icon IDs or enter any icon ID manually. Enter 202 for no icon." FontSize="12" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,0,0,12" />
                                 <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                     <TextBox Text="{Binding ProfileIconIdInput, UpdateSourceTrigger=PropertyChanged}" Width="140" Margin="0,0,8,0" />
-                                    <Button Grid.Column="1" Content="Set profile icon" Command="{Binding SetProfileIconCommand}" />
+                                    <Button Grid.Column="1" Content="Set profile icon" Command="{Binding SetProfileIconCommand}" IsEnabled="{Binding IsClientConnected}" />
                                 </Grid>
                                 <ItemsControl ItemsSource="{Binding AvailableProfileIcons}" Margin="0,16,0,0">
                                     <ItemsControl.ItemsPanel>
