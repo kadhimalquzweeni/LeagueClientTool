@@ -187,7 +187,7 @@
                         </Border>
                         <Border Background="{StaticResource PanelBackgroundBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1" CornerRadius="12" Padding="20">
                             <StackPanel>
-                                <TextBlock Text="PROFILE BANNER & CHALLENGE TOKENS" FontSize="15" FontWeight="Bold" Margin="0,0,0,12" />
+                                <TextBlock Text="PROFILE BANNER &amp; CHALLENGE TOKENS" FontSize="15" FontWeight="Bold" Margin="0,0,0,12" />
                                 <WrapPanel>
                                     <Button Content="Set last-rank banner" Command="{Binding SetLastRankBannerCommand}" Margin="0,0,8,8" />
                                     <Button Content="Clear challenge tokens" Command="{Binding ClearChallengeTokensCommand}" Margin="0,0,8,8" />
@@ -205,10 +205,27 @@
                                 <TextBlock Text="PROFILE ICON" FontSize="15" FontWeight="Bold" Margin="0,0,0,12" />
                                 <TextBlock Text="Choose one of the classic icon IDs or enter any icon ID manually. Enter 202 for no icon." FontSize="12" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,0,0,12" />
                                 <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                                    <ComboBox ItemsSource="{Binding AvailableProfileIconIds}" SelectedItem="{Binding SelectedProfileIconId}" Margin="0,0,8,0" />
-                                    <TextBox Grid.Column="1" Text="{Binding ProfileIconIdInput, UpdateSourceTrigger=PropertyChanged}" Width="110" Margin="0,0,8,0" />
-                                    <Button Grid.Column="2" Content="Set profile icon" Command="{Binding SetProfileIconCommand}" />
+                                    <TextBox Text="{Binding ProfileIconIdInput, UpdateSourceTrigger=PropertyChanged}" Width="140" Margin="0,0,8,0" />
+                                    <Button Grid.Column="1" Content="Set profile icon" Command="{Binding SetProfileIconCommand}" />
                                 </Grid>
+                                <ItemsControl ItemsSource="{Binding AvailableProfileIcons}" Margin="0,16,0,0">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#11151D" BorderBrush="#292F3D" BorderThickness="1" CornerRadius="8" Padding="8" Margin="0,0,8,8">
+                                                <StackPanel Width="82">
+                                                    <Image Source="{Binding ImageUrl}" Width="64" Height="64" Stretch="Uniform" />
+                                                    <TextBlock Text="{Binding IconId, StringFormat=ID {0}}" FontSize="10" Foreground="{StaticResource SecondaryTextBrush}" HorizontalAlignment="Center" Margin="0,5,0,5" />
+                                                    <Button Content="Set" Padding="8,5"
+                                                            Command="{Binding DataContext.SetProfileIconCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                            CommandParameter="{Binding IconId}" />
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                             </StackPanel>
                         </Border>
                         <Border Background="{StaticResource PanelBackgroundBrush}" BorderBrush="{StaticResource PanelBorderBrush}" BorderThickness="1" CornerRadius="12" Padding="20">
@@ -218,7 +235,8 @@
                                 <ComboBox ItemsSource="{Binding ChampionBackgrounds}" DisplayMemberPath="ChampionName" SelectedItem="{Binding SelectedChampion}" />
                                 <TextBlock Text="Skin" FontSize="12" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,14,0,6" />
                                 <ComboBox ItemsSource="{Binding ChampionSkins}" DisplayMemberPath="SkinName" SelectedItem="{Binding SelectedSkin}" />
-                                <TextBlock Text="{Binding SelectedSkin.ImageUrl, TargetNullValue=Choose a champion and skin}" TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,10,0,12" />
+                                <Image Source="{Binding SelectedSkin.ImageUrl}" Height="190" Stretch="UniformToFill" Margin="0,12,0,8" />
+                                <TextBlock Text="{Binding SelectedSkin.ImageUrl, TargetNullValue=Choose a champion and skin}" TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource SecondaryTextBrush}" Margin="0,0,0,12" />
                                 <Button Content="Apply selected background" Command="{Binding SetProfileBackgroundCommand}" HorizontalAlignment="Left" />
                             </StackPanel>
                         </Border>

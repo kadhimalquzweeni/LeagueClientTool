@@ -29,8 +29,10 @@ public sealed partial class MainViewModel : ObservableObject
         new("settings", "Settings", "☷", "Application information and connection details.")
     ];
 
-    public ObservableCollection<int> AvailableProfileIconIds { get; } =
-        new(Enumerable.Range(50, 29).Append(202));
+    public ObservableCollection<ProfileIconOption> AvailableProfileIcons { get; } =
+        new(Enumerable.Range(50, 29).Select(id => new ProfileIconOption(
+            id,
+            $"https://ddragon.leagueoflegends.com/cdn/15.24.1/img/profileicon/{id}.png")));
 
     public ObservableCollection<string> QueueOptions { get; } =
     [
@@ -72,7 +74,6 @@ public sealed partial class MainViewModel : ObservableObject
 
     [ObservableProperty] private string operationMessage = "Ready.";
     [ObservableProperty] private string profileIconIdInput = "50";
-    [ObservableProperty] private int selectedProfileIconId = 50;
     [ObservableProperty] private string statusMessageInput = string.Empty;
     [ObservableProperty] private string gameNameInput = string.Empty;
     [ObservableProperty] private string tagLineInput = string.Empty;
@@ -179,15 +180,21 @@ public sealed partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task SetProfileIconAsync()
+    private async Task SetProfileIconAsync(int? iconId)
     {
-        if (!int.TryParse(ProfileIconIdInput, out int iconId))
+        int selectedIconId;
+        if (iconId.HasValue)
+        {
+            selectedIconId = iconId.Value;
+            ProfileIconIdInput = selectedIconId.ToString();
+        }
+        else if (!int.TryParse(ProfileIconIdInput, out selectedIconId))
         {
             OperationMessage = "Enter a valid numeric profile icon ID.";
             return;
         }
 
-        await RunProfileActionAsync(() => _profileService.SetProfileIconAsync(iconId));
+        await RunProfileActionAsync(() => _profileService.SetProfileIconAsync(selectedIconId));
     }
 
     [RelayCommand]
