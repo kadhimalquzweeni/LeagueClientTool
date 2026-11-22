@@ -92,13 +92,13 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl></StackPanel></ScrollViewer><ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="{Binding IsBackgroundsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"><StackPanel><StackPanel Visibility="{Binding IsChampionSelectionVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-<Grid Margin="0,0,16,22">
+<Grid Margin="0,0,0,22">
     <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
     <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,24,0">
         <TextBlock Text="Champion Backgrounds" FontSize="40" FontWeight="Black" Margin="0,0,0,8"/>
         <TextBlock Text="Find a champion to browse their available splash art." FontSize="13" Foreground="{StaticResource SecondaryTextBrush}"/>
     </StackPanel>
-    <Border Grid.Column="1" Background="#182334" BorderBrush="#34445A" BorderThickness="1" CornerRadius="9" Padding="12" Width="360" VerticalAlignment="Center">
+    <Border Grid.Column="1" Background="#182334" BorderBrush="#34445A" BorderThickness="1" CornerRadius="9" Padding="12" Width="360" Margin="0,0,110,0" VerticalAlignment="Center">
         <Grid>
             <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
             <TextBlock Text="⌕" FontSize="21" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
