@@ -4,33 +4,32 @@ A native Windows WPF desktop companion for the League of Legends client. The app
 
 ## Features
 
+### MVC-matched desktop interface
+- Recreates the original MVC application's horizontal navigation and page order: Home, Privacy, Profile Icons, Backgrounds, Status, Tokens, Banner, Visible Rank, Client Tools, Friend Tools, Riot ID Changer and Custom LCU Request.
+- Uses the original deep navy and gold visual theme, gradient background, hero headings, connection-status strips, rounded form panels, gold buttons and hover effects.
+- Home presents the same ten tool destinations as clickable cards.
+- Each tool has its own page rather than combining unrelated actions into one screen.
+- Champion backgrounds use a two-step gallery: choose a champion, browse its skin artwork, then return to the champion gallery when needed.
+
 ### Dashboard and connection
 - Detects the running League client by locating its lockfile.
 - Authenticates against the local LCU endpoint and checks the API connection.
 - Refreshes connection status automatically every five seconds.
 - Displays the connected player's Riot ID, summoner level and region when available.
 
-### Profile
+### Profile and customisation
 - Change the profile icon, including the classic icon gallery (IDs 50–78) and manual icon IDs.
-- Change the profile status message.
-- Change the Riot ID game name and tagline.
+- Change the profile status message and Riot ID game name/tagline.
 - Set or clear the visible rank shown in League chat and the friends list.
-- Apply the last-rank profile banner.
+- Set the profile banner style (the Invisible Banner action).
+- Browse champion backgrounds and skin artwork, then apply a selected skin.
 - Clear equipped challenge tokens or copy the first equipped token into all three slots.
 
-### Customisation
-- Browse champion profile backgrounds using Data Dragon.
-- Browse a champion's base skin and available skins.
-- Preview skin artwork before applying the background.
-
-### Friends
+### Friends and client tools
 - Accept all incoming friend requests.
 - Delete all pending friend requests.
 - Browse friend folders and delete friends in a selected folder.
-
-### Client tools
-- Send custom GET, POST, PUT, PATCH and DELETE requests to local LCU API paths.
-- Inspect the HTTP status and response body.
+- Send custom GET, POST, PUT, PATCH and DELETE requests to local LCU API paths and inspect the HTTP status and response body.
 - Restart the League client UX and renderer without intentionally terminating the game process.
 
 Destructive friend, challenge-token and restart actions ask for confirmation.

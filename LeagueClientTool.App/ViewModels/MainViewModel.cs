@@ -23,6 +23,7 @@ public sealed partial class MainViewModel : ObservableObject
     public ObservableCollection<NavigationItem> NavigationItems { get; } =
     [
         new("home", "Home", "⌂", "A local desktop tool for customising your League Client profile."),
+        new("privacy", "Privacy", "☷", "Application information and connection details."),
         new("icons", "Profile Icons", "◉", "Browse available profile icons and set one directly through your local League Client."),
         new("backgrounds", "Backgrounds", "✧", "Browse champions, view their skins, and set a splash art as your profile background."),
         new("status", "Status", "✎", "Update your League Client status message."),
@@ -31,9 +32,8 @@ public sealed partial class MainViewModel : ObservableObject
         new("rank", "Visible Rank", "★", "Change the rank displayed in League chat and your friends list."),
         new("client", "Client Tools", "⚙", "Restart the League Client interface."),
         new("friends", "Friend Tools", "♧", "Accept or delete friend requests and manage friend folders."),
-        new("riotid", "Riot ID Changer", "✎", "Change your Riot ID name and tagline."),
-        new("request", "Custom LCU Request", "⌘", "Send custom requests to the local League Client API."),
-        new("privacy", "Privacy", "☷", "Application information and connection details.")
+        new("riotid", "Riot Id Changer", "✎", "Change your Riot ID name and tagline."),
+        new("request", "Custom LCU Request", "⌘", "Send custom requests to the local League Client API.")
     ];
 
     public ObservableCollection<ProfileIconOption> AvailableProfileIcons { get; } =
