@@ -50,7 +50,10 @@ public sealed class LeagueClientApiClientTests
     public async Task GetAsync_NonSuccessStatusThrowsHttpRequestException()
     {
         using var httpClient = new HttpClient(new StubHttpMessageHandler(
-            _ => new HttpResponseMessage(HttpStatusCode.Unauthorized)));
+            _ => new HttpResponseMessage(HttpStatusCode.Unauthorized)))
+        {
+            BaseAddress = new Uri("https://127.0.0.1:54321/")
+        };
         using var apiClient = new LeagueClientApiClient(httpClient);
 
         await Assert.ThrowsAsync<HttpRequestException>(
