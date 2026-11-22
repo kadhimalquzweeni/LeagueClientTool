@@ -52,7 +52,8 @@ public sealed class ChallengeTokenServiceTests
 
         Assert.False(result.Success);
         Assert.Contains("No equipped challenge token", result.Message);
-        Assert.Null(fixture.Api.LastMethod);
+        Assert.Equal(HttpMethod.Get, fixture.Api.LastMethod);
+        Assert.Equal("/lol-challenges/v1/summary-player-data/local-player", fixture.Api.LastEndpoint);
     }
 
     [Fact]
