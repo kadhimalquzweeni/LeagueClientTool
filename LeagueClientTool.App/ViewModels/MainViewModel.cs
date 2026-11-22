@@ -22,12 +22,12 @@ public sealed partial class MainViewModel : ObservableObject
 
     public ObservableCollection<NavigationItem> NavigationItems { get; } =
     [
-        new("home", "Overview", "⌂", "Your League Client Tool dashboard."),
+        new("home", "Home", "⌂", "Your League Client Tool dashboard."),
         new("profile", "Profile", "◉", "Manage your Riot ID, status, visible rank and profile banner."),
         new("customisation", "Customisation", "✧", "Change your profile icon and champion background."),
-        new("friends", "Friends", "♧", "Manage friend requests and friend folders."),
+        new("friends", "Friend Tools", "♧", "Manage friend requests and friend folders."),
         new("tools", "Client Tools", "⚙", "Send custom LCU requests and restart the League interface."),
-        new("settings", "Settings", "☷", "Application information and connection details.")
+        new("settings", "Privacy", "☷", "Application information and connection details.")
     ];
 
     public ObservableCollection<ProfileIconOption> AvailableProfileIcons { get; } =
