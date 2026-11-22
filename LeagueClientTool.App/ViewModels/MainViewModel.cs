@@ -93,6 +93,8 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty] private string visibleRankQueue = "RANKED_SOLO_5x5";
     [ObservableProperty] private string visibleRankTier = "GOLD";
     [ObservableProperty] private string visibleRankDivision = "IV";
+    [ObservableProperty] private bool isChampionSelectionVisible = true;
+    [ObservableProperty] private bool isSkinGalleryVisible;
     [ObservableProperty] private ChampionBackground? selectedChampion;
     [ObservableProperty] private ChampionSkin? selectedSkin;
     [ObservableProperty] private FriendGroup? selectedFriendGroup;
@@ -273,7 +275,7 @@ public sealed partial class MainViewModel : ObservableObject
             ChampionBackgrounds.Clear();
             foreach (var background in backgrounds) ChampionBackgrounds.Add(background);
             OperationMessage = $"Loaded {ChampionBackgrounds.Count} champion backgrounds.";
-            SelectedChampion = ChampionBackgrounds.FirstOrDefault();
+
         }
         catch (Exception exception)
         {
@@ -394,13 +396,39 @@ public sealed partial class MainViewModel : ObservableObject
         IsRiotIdVisible = value.Key == "riotid";
         IsRequestVisible = value.Key == "request";
         IsPrivacyVisible = value.Key == "privacy";
-        if (IsBackgroundsVisible) _ = LoadChampionBackgroundsAsync();
+        if (IsBackgroundsVisible)
+        {
+            IsChampionSelectionVisible = true;
+            IsSkinGalleryVisible = false;
+            SelectedChampion = null;
+            _ = LoadChampionBackgroundsAsync();
+        }
         if (IsFriendsVisible) _ = LoadFriendGroupsAsync();
     }
 
     partial void OnSelectedChampionChanged(ChampionBackground? value)
     {
+        if (value is null)
+        {
+            ChampionSkins.Clear();
+            SelectedSkin = null;
+            IsChampionSelectionVisible = true;
+            IsSkinGalleryVisible = false;
+            return;
+        }
+
+        IsChampionSelectionVisible = false;
+        IsSkinGalleryVisible = true;
         _ = LoadChampionSkinsAsync(value);
+    }
+
+    [RelayCommand]
+    private void BackToChampions()
+    {
+        SelectedChampion = null;
+        SelectedSkin = null;
+        IsChampionSelectionVisible = true;
+        IsSkinGalleryVisible = false;
     }
 
     private async Task LoadChampionSkinsAsync(ChampionBackground? champion)
