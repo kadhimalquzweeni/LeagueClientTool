@@ -22,12 +22,18 @@ public sealed partial class MainViewModel : ObservableObject
 
     public ObservableCollection<NavigationItem> NavigationItems { get; } =
     [
-        new("home", "Home", "⌂", "Your League Client Tool dashboard."),
-        new("profile", "Profile", "◉", "Manage your Riot ID, status, visible rank and profile banner."),
-        new("customisation", "Customisation", "✧", "Change your profile icon and champion background."),
-        new("friends", "Friend Tools", "♧", "Manage friend requests and friend folders."),
-        new("tools", "Client Tools", "⚙", "Send custom LCU requests and restart the League interface."),
-        new("settings", "Privacy", "☷", "Application information and connection details.")
+        new("home", "Home", "⌂", "A local desktop tool for customising your League Client profile."),
+        new("icons", "Profile Icons", "◉", "Browse available profile icons and set one directly through your local League Client."),
+        new("backgrounds", "Backgrounds", "✧", "Browse champions, view their skins, and set a splash art as your profile background."),
+        new("status", "Status", "✎", "Update your League Client status message."),
+        new("tokens", "Tokens", "◇", "Clear challenge tokens or copy the first token across all slots."),
+        new("banner", "Banner", "▣", "Set your League profile banner accent."),
+        new("rank", "Visible Rank", "★", "Change the rank displayed in League chat and your friends list."),
+        new("client", "Client Tools", "⚙", "Restart the League Client interface."),
+        new("friends", "Friend Tools", "♧", "Accept or delete friend requests and manage friend folders."),
+        new("riotid", "Riot ID Changer", "✎", "Change your Riot ID name and tagline."),
+        new("request", "Custom LCU Request", "⌘", "Send custom requests to the local League Client API."),
+        new("privacy", "Privacy", "☷", "Application information and connection details.")
     ];
 
     public ObservableCollection<ProfileIconOption> AvailableProfileIcons { get; } =
@@ -59,11 +65,17 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty] private string pageTitle = "Overview";
     [ObservableProperty] private string pageDescription = "Your League Client Tool dashboard.";
     [ObservableProperty] private bool isDashboardVisible = true;
-    [ObservableProperty] private bool isProfileVisible;
-    [ObservableProperty] private bool isCustomisationVisible;
+    [ObservableProperty] private bool isIconsVisible;
+    [ObservableProperty] private bool isBackgroundsVisible;
+    [ObservableProperty] private bool isStatusVisible;
+    [ObservableProperty] private bool isTokensVisible;
+    [ObservableProperty] private bool isBannerVisible;
+    [ObservableProperty] private bool isRankVisible;
+    [ObservableProperty] private bool isClientVisible;
     [ObservableProperty] private bool isFriendsVisible;
-    [ObservableProperty] private bool isToolsVisible;
-    [ObservableProperty] private bool isSettingsVisible;
+    [ObservableProperty] private bool isRiotIdVisible;
+    [ObservableProperty] private bool isRequestVisible;
+    [ObservableProperty] private bool isPrivacyVisible;
 
     [ObservableProperty] private string clientStatus = "Not detected";
     [ObservableProperty] private string connectionDetails = "Open the League of Legends client, then refresh detection.";
@@ -110,6 +122,13 @@ public sealed partial class MainViewModel : ObservableObject
         _friendToolsService = friendToolsService;
         _clientToolsService = clientToolsService;
         SelectedNavigation = NavigationItems[0];
+    }
+
+    [RelayCommand]
+    private void Navigate(string key)
+    {
+        NavigationItem? destination = NavigationItems.FirstOrDefault(item => item.Key == key);
+        if (destination is not null) SelectedNavigation = destination;
     }
 
     [RelayCommand]
@@ -345,13 +364,18 @@ public sealed partial class MainViewModel : ObservableObject
         PageTitle = value.Title;
         PageDescription = value.Description;
         IsDashboardVisible = value.Key == "home";
-        IsProfileVisible = value.Key == "profile";
-        IsCustomisationVisible = value.Key == "customisation";
+        IsIconsVisible = value.Key == "icons";
+        IsBackgroundsVisible = value.Key == "backgrounds";
+        IsStatusVisible = value.Key == "status";
+        IsTokensVisible = value.Key == "tokens";
+        IsBannerVisible = value.Key == "banner";
+        IsRankVisible = value.Key == "rank";
+        IsClientVisible = value.Key == "client";
         IsFriendsVisible = value.Key == "friends";
-        IsToolsVisible = value.Key == "tools";
-        IsSettingsVisible = value.Key == "settings";
-
-        if (IsCustomisationVisible) _ = LoadChampionBackgroundsAsync();
+        IsRiotIdVisible = value.Key == "riotid";
+        IsRequestVisible = value.Key == "request";
+        IsPrivacyVisible = value.Key == "privacy";
+        if (IsBackgroundsVisible) _ = LoadChampionBackgroundsAsync();
         if (IsFriendsVisible) _ = LoadFriendGroupsAsync();
     }
 
