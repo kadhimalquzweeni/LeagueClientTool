@@ -32,7 +32,7 @@ public sealed partial class MainViewModel : ObservableObject
         new("rank", "Visible Rank", "★", "Change the rank displayed in League chat and your friends list."),
         new("client", "Client Tools", "⚙", "Restart the League Client interface."),
         new("friends", "Friend Tools", "♧", "Accept or delete friend requests and manage friend folders."),
-        new("riotid", "Riot Id Changer", "✎", "Change your Riot ID name and tagline."),
+        new("riotid", "Riot Id Changer", "✎", "Change your Riot ID name and tagline using the local League Client."),
         new("request", "Custom LCU Request", "⌘", "Send custom requests to the local League Client API.")
     ];
 
@@ -86,6 +86,9 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty] private string playerRegion = "—";
 
     [ObservableProperty] private string operationMessage = "Ready.";
+    [ObservableProperty] private string profileResponseStatus = string.Empty;
+    [ObservableProperty] private string profileResponseBody = string.Empty;
+    [ObservableProperty] private bool isProfileResponseVisible;
     [ObservableProperty] private string profileIconIdInput = "50";
     [ObservableProperty] private string statusMessageInput = string.Empty;
     [ObservableProperty] private string gameNameInput = string.Empty;
@@ -355,10 +358,18 @@ public sealed partial class MainViewModel : ObservableObject
         {
             var result = await action();
             OperationMessage = result.Message;
+            ProfileResponseStatus = result.StatusCode is int statusCode
+                ? $"HTTP {statusCode} · {(result.Success ? "Success" : "Failed")}"
+                : (result.Success ? "Success" : "Failed");
+            ProfileResponseBody = result.ResponseBody ?? string.Empty;
+            IsProfileResponseVisible = !string.IsNullOrWhiteSpace(ProfileResponseBody);
         }
         catch (Exception exception)
         {
             OperationMessage = $"Operation failed: {exception.Message}";
+            ProfileResponseStatus = "Operation failed";
+            ProfileResponseBody = exception.Message;
+            IsProfileResponseVisible = true;
         }
     }
 
