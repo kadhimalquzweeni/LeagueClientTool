@@ -12,9 +12,10 @@
                 <TextBlock Text="TOOLKIT" FontSize="21" FontWeight="ExtraBold" Foreground="{StaticResource PrimaryTextBrush}" Margin="0,2,0,0"/>
                 <TextBlock Text="Desktop companion" FontSize="11" Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,0"/>
             </StackPanel>
-            <StackPanel Grid.Row="1">
-                <TextBlock Text="WORKSPACE" FontSize="10" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}" Margin="22,0,0,12"/>
-                <ListBox ItemsSource="{Binding NavigationItems}" SelectedItem="{Binding SelectedNavigation, Mode=TwoWay}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="WORKSPACE" FontSize="10" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}" Margin="22,0,0,12"/>
+                <ListBox Grid.Row="1" ItemsSource="{Binding NavigationItems}" SelectedItem="{Binding SelectedNavigation, Mode=TwoWay}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListBox.ItemsPanel><ItemsPanelTemplate><StackPanel/></ItemsPanelTemplate></ListBox.ItemsPanel>
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
@@ -46,7 +47,7 @@
                         </Style>
                     </ListBox.ItemContainerStyle>
                 </ListBox>
-            </StackPanel>
+            </Grid>
             <Border Grid.Row="2" Background="#182334" BorderBrush="#2A394E" BorderThickness="1" CornerRadius="12" Padding="14" Margin="14,16,14,18">
                 <StackPanel>
                     <TextBlock Text="CLIENT CONNECTION" FontSize="9" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
