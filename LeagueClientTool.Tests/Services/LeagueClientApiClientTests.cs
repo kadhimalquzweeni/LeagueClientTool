@@ -83,7 +83,7 @@ public sealed class LeagueClientApiClientTests
             Assert.Equal(HttpMethod.Put, request.Method);
             Assert.Equal("/lol-summoner/v1/current-summoner/icon", request.RequestUri!.AbsolutePath);
             Assert.Equal("application/json", request.Content!.Headers.ContentType!.MediaType);
-            Assert.Equal("{\\"profileIconId\\":12}", request.Content.ReadAsStringAsync().GetAwaiter().GetResult());
+            Assert.Equal("{\"profileIconId\":12}", request.Content.ReadAsStringAsync().GetAwaiter().GetResult());
 
             return new HttpResponseMessage(HttpStatusCode.NoContent)
             {
@@ -99,7 +99,7 @@ public sealed class LeagueClientApiClientTests
         var result = await apiClient.SendAsync(
             HttpMethod.Put,
             "/lol-summoner/v1/current-summoner/icon",
-            "{\\"profileIconId\\":12}");
+            "{\"profileIconId\":12}");
 
         Assert.Equal(204, result.StatusCode);
         Assert.True(result.IsSuccessStatusCode);

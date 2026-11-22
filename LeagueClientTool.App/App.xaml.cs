@@ -1,3 +1,4 @@
+using System.Net.Http;
 using System.Windows;
 using LeagueClientTool.App.ViewModels;
 using LeagueClientTool.Core.Interfaces;
