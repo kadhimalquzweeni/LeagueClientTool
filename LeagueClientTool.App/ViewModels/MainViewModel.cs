@@ -218,8 +218,11 @@ public sealed partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task SetProfileBackgroundAsync()
+    private async Task SetProfileBackgroundAsync(int? skinId)
     {
+        if (skinId.HasValue)
+            SelectedSkin = ChampionSkins.FirstOrDefault(skin => skin.SkinId == skinId.Value);
+
         if (SelectedSkin is null)
         {
             OperationMessage = "Choose a champion and skin first.";
@@ -361,8 +364,24 @@ public sealed partial class MainViewModel : ObservableObject
     {
         if (value is null) return;
 
-        PageTitle = value.Title;
-        PageDescription = value.Description;
+        PageTitle = value.Key switch
+        {
+            "home" => "LoL Client Tool",
+            "icons" => "Profile Icon Changer",
+            "backgrounds" => "Champion Backgrounds",
+            "status" => "Profile Status Changer",
+            "tokens" => "Challenge Tokens",
+            "banner" => "Profile Banner",
+            "rank" => "Visible Rank",
+            "client" => "Client Tools",
+            "friends" => "Friend Tools",
+            "riotid" => "Riot ID Changer",
+            "request" => "Custom LCU Request",
+            _ => "Privacy"
+        };
+        PageDescription = value.Key == "home"
+            ? "A local desktop tool for customising your League Client profile. Change your profile icon, browse champion backgrounds, and set profile backgrounds from a clean desktop interface."
+            : value.Description;
         IsDashboardVisible = value.Key == "home";
         IsIconsVisible = value.Key == "icons";
         IsBackgroundsVisible = value.Key == "backgrounds";
