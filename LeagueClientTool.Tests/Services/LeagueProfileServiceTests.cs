@@ -143,6 +143,17 @@ public sealed class LeagueProfileServiceTests
             () => fixture.Service.SetProfileIconAsync(iconId));
     }
 
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task UpdateStatusMessageAsync_RejectsEmptyMessages(string message)
+    {
+        var fixture = new Fixture();
+
+        await Assert.ThrowsAsync<ArgumentException>(
+            () => fixture.Service.UpdateStatusMessageAsync(message));
+    }
+
     [Fact]
     public async Task UpdateStatusMessageAsync_RejectsMessagesLongerThanFiveThousandCharacters()
     {
