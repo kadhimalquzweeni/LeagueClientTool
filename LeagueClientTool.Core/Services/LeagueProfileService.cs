@@ -238,6 +238,8 @@ public sealed class LeagueProfileService(
 
     private static bool TryReadInt32(JsonElement value, out int result)
     {
+        result = default;
+
         if (value.ValueKind == JsonValueKind.Number)
         {
             return value.TryGetInt32(out result);
