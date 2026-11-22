@@ -10,12 +10,12 @@ public sealed class LeagueCustomRequestServiceTests
     public async Task SendAsync_ForwardsMethodEndpointAndBody()
     {
         var fixture = new Fixture();
-        var result = await fixture.Service.SendAsync("PATCH", "/lol-chat/v1/me", "{\\"statusMessage\\":\\"hello\\"}");
+        var result = await fixture.Service.SendAsync("PATCH", "/lol-chat/v1/me", "{\"statusMessage\":\"hello\"}");
 
         Assert.True(result.Success);
         Assert.Equal(HttpMethod.Patch, fixture.Api.LastMethod);
         Assert.Equal("/lol-chat/v1/me", fixture.Api.LastEndpoint);
-        Assert.Equal("{\\"statusMessage\\":\\"hello\\"}", fixture.Api.LastBody);
+        Assert.Equal("{\"statusMessage\":\"hello\"}", fixture.Api.LastBody);
     }
 
     [Fact]
