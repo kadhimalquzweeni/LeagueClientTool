@@ -144,6 +144,15 @@ public sealed class LeagueProfileServiceTests
     }
 
     [Fact]
+    public async Task UpdateStatusMessageAsync_RejectsMessagesLongerThanFiveThousandCharacters()
+    {
+        var fixture = new Fixture();
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+            () => fixture.Service.UpdateStatusMessageAsync(new string('x', 5001)));
+    }
+
+    [Fact]
     public async Task ChangeRiotIdAsync_RejectsEmptyValues()
     {
         var fixture = new Fixture();

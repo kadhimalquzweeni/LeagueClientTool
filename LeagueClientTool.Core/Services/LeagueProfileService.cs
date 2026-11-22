@@ -51,6 +51,10 @@ public sealed class LeagueProfileService(
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(statusMessage);
+        if (statusMessage.Length > 5000)
+        {
+            throw new ArgumentOutOfRangeException(nameof(statusMessage), "Status message must be 5000 characters or fewer.");
+        }
 
         return SendAsync(
             HttpMethod.Put,

@@ -166,7 +166,7 @@
                             <StackPanel>
                                 <TextBlock Text="PROFILE STATUS MESSAGE" FontSize="15" FontWeight="Bold" Margin="0,0,0,12" />
                                 <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
-                                    <TextBox Text="{Binding StatusMessageInput, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,10,0" />
+                                    <TextBox Text="{Binding StatusMessageInput, UpdateSourceTrigger=PropertyChanged}" MaxLength="5000" Margin="0,0,10,0" />
                                     <Button Grid.Column="1" Content="Update status" Command="{Binding UpdateStatusMessageCommand}" />
                                 </Grid>
                             </StackPanel>
