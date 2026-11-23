@@ -6,9 +6,9 @@
     <Border Grid.Row="0" Grid.ColumnSpan="2" Background="#111927" BorderBrush="#263448" BorderThickness="0,0,0,1" MouseLeftButtonDown="OnTitleBarMouseLeftButtonDown">
         <Grid>
             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="46"/><ColumnDefinition Width="46"/><ColumnDefinition Width="46"/></Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Content="—" FontSize="15" Foreground="#E6EDF5" Background="Transparent" Padding="0" Click="OnMinimizeClick" shell:WindowChrome.IsHitTestVisibleInChrome="True"/>
-            <Button x:Name="MaximizeRestoreButton" Grid.Column="2" Content="□" FontSize="13" Foreground="#E6EDF5" Background="Transparent" Padding="0" Click="OnMaximizeRestoreClick" shell:WindowChrome.IsHitTestVisibleInChrome="True"/>
-            <Button Grid.Column="3" Content="×" FontSize="17" Foreground="#E6EDF5" Background="Transparent" Padding="0" Click="OnCloseClick" shell:WindowChrome.IsHitTestVisibleInChrome="True"/>
+            <Button Grid.Column="1" Style="{StaticResource WindowCaptionButtonStyle}" Click="OnMinimizeClick" ToolTip="Minimise" shell:WindowChrome.IsHitTestVisibleInChrome="True"><Path Data="M 4,10 L 16,10" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.4" StrokeStartLineCap="Square"/></Button>
+            <Button x:Name="MaximizeRestoreButton" Grid.Column="2" Style="{StaticResource WindowCaptionButtonStyle}" Click="OnMaximizeRestoreClick" ToolTip="Maximise" shell:WindowChrome.IsHitTestVisibleInChrome="True"><Path Data="M 4.5,4.5 H 15.5 V 15.5 H 4.5 Z" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.2" Fill="Transparent" StrokeLineJoin="Miter"/></Button>
+            <Button Grid.Column="3" Style="{StaticResource WindowCloseButtonStyle}" Click="OnCloseClick" ToolTip="Close" shell:WindowChrome.IsHitTestVisibleInChrome="True"><Path Data="M 5,5 L 15,15 M 15,5 L 5,15" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" StrokeThickness="1.4" StrokeStartLineCap="Round" StrokeEndLineCap="Round"/></Button>
         </Grid>
     </Border>
     <Border Grid.Row="1" Grid.Column="0" Background="#111927" BorderBrush="#263448" BorderThickness="0,0,1,0">
