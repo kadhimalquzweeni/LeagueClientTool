@@ -1,4 +1,6 @@
+using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Threading;
 using LeagueClientTool.App.ViewModels;
 
@@ -6,6 +8,19 @@ namespace LeagueClientTool.App;
 
 public partial class MainWindow : Window
 {
+    private const int DwmwaUseImmersiveDarkMode = 20;
+    private const int DwmwaUseImmersiveDarkModeLegacy = 19;
+    private const int DwmwaBorderColor = 34;
+    private const int DwmwaCaptionColor = 35;
+    private const int DwmwaTextColor = 36;
+
+    [DllImport("dwmapi.dll", PreserveSig = true)]
+    private static extern int DwmSetWindowAttribute(
+        IntPtr hwnd,
+        int attribute,
+        ref int attributeValue,
+        int attributeSize);
+
     private readonly MainViewModel _viewModel;
     private readonly DispatcherTimer _connectionTimer;
 
@@ -26,8 +41,41 @@ public partial class MainWindow : Window
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
+        ApplyDarkTitleBar();
         await _viewModel.RefreshConnectionCommand.ExecuteAsync(null);
         _connectionTimer.Start();
+    }
+
+    private void ApplyDarkTitleBar()
+    {
+        IntPtr handle = new WindowInteropHelper(this).Handle;
+        int enabled = 1;
+
+        // Windows 11 uses attribute 20; attribute 19 is supported by earlier builds.
+        int result = DwmSetWindowAttribute(
+            handle,
+            DwmwaUseImmersiveDarkMode,
+            ref enabled,
+            sizeof(int));
+
+        if (result != 0)
+        {
+            _ = DwmSetWindowAttribute(
+                handle,
+                DwmwaUseImmersiveDarkModeLegacy,
+                ref enabled,
+                sizeof(int));
+        }
+
+        // COLORREF values use 0x00BBGGRR ordering.
+        SetDwmColor(handle, DwmwaCaptionColor, 0x00271911); // #111927
+        SetDwmColor(handle, DwmwaTextColor, 0x00FCFAF8);    // #F8FAFC
+        SetDwmColor(handle, DwmwaBorderColor, 0x00483426);  // #263448
+    }
+
+    private static void SetDwmColor(IntPtr handle, int attribute, int color)
+    {
+        _ = DwmSetWindowAttribute(handle, attribute, ref color, sizeof(int));
     }
 
     private async void OnConnectionTimerTick(object? sender, EventArgs e)
