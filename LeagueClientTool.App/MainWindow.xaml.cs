@@ -16,9 +16,26 @@ public partial class MainWindow : Window
     private const int WmSetIcon = 0x0080;
     private const int IconSmall = 0;
     private const int IconBig = 1;
+    private const int GwlExStyle = -20;
+    private const int WsExDlgModalFrame = 0x0001;
+    private const uint SwpNoSize = 0x0001;
+    private const uint SwpNoMove = 0x0002;
+    private const uint SwpNoZOrder = 0x0004;
+    private const uint SwpFrameChanged = 0x0020;
 
     [DllImport("user32.dll", CharSet = CharSet.Auto)]
     private static extern IntPtr SendMessage(IntPtr hwnd, int message, IntPtr wParam, IntPtr lParam);
+
+    [DllImport("user32.dll", EntryPoint = "GetWindowLongPtrW")]
+    private static extern IntPtr GetWindowLongPtr(IntPtr hwnd, int index);
+
+    [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW")]
+    private static extern IntPtr SetWindowLongPtr(IntPtr hwnd, int index, IntPtr newStyle);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool SetWindowPos(
+        IntPtr hwnd, IntPtr insertAfter, int x, int y, int width, int height, uint flags);
 
     [DllImport("dwmapi.dll", PreserveSig = true)]
     private static extern int DwmSetWindowAttribute(
@@ -56,8 +73,23 @@ public partial class MainWindow : Window
     private void HideWindowCaptionIcon()
     {
         IntPtr handle = new WindowInteropHelper(this).Handle;
+
+        // Clearing WM_SETICON alone can leave the class icon visible in the caption.
+        // WS_EX_DLGMODALFRAME tells Windows not to reserve or draw the caption icon.
+        long extendedStyle = GetWindowLongPtr(handle, GwlExStyle).ToInt64();
+        _ = SetWindowLongPtr(
+            handle,
+            GwlExStyle,
+            new IntPtr(extendedStyle | WsExDlgModalFrame));
+
         _ = SendMessage(handle, WmSetIcon, new IntPtr(IconSmall), IntPtr.Zero);
         _ = SendMessage(handle, WmSetIcon, new IntPtr(IconBig), IntPtr.Zero);
+
+        _ = SetWindowPos(
+            handle,
+            IntPtr.Zero,
+            0, 0, 0, 0,
+            SwpNoSize | SwpNoMove | SwpNoZOrder | SwpFrameChanged);
     }
 
     private void ApplyDarkTitleBar()
@@ -147,7 +179,7 @@ public partial class MainWindow : Window
     }
 
     private bool Confirm(string message, string title) =>
-        MessageBox.Show(this, message, title, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
+        MessageBox.Show(this, message, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
 
     private void OnClosed(object? sender, EventArgs e)
     {
