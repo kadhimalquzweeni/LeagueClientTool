@@ -21,6 +21,8 @@ public partial class MainWindow : Window
     private const int GclpHIcon = -14;
     private const int GclpHIconSmall = -34;
     private const int WsExDlgModalFrame = 0x0001;
+    private const int WmGetMinMaxInfo = 0x0024;
+    private const uint MonitorDefaultToNearest = 2;
     private const uint SwpNoSize = 0x0001;
     private const uint SwpNoMove = 0x0002;
     private const uint SwpNoZOrder = 0x0004;
@@ -50,6 +52,39 @@ public partial class MainWindow : Window
         ref int attributeValue,
         int attributeSize);
 
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct NativePoint { public int X; public int Y; }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct MinMaxInfo
+    {
+        public NativePoint Reserved;
+        public NativePoint MaxSize;
+        public NativePoint MaxPosition;
+        public NativePoint MinTrackSize;
+        public NativePoint MaxTrackSize;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct NativeRect { public int Left; public int Top; public int Right; public int Bottom; }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+    private struct MonitorInfo
+    {
+        public int Size;
+        public NativeRect Monitor;
+        public NativeRect Work;
+        public uint Flags;
+    }
+
+    [DllImport("user32.dll")]
+    private static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint flags);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool GetMonitorInfo(IntPtr monitor, ref MonitorInfo info);
+
     private readonly MainViewModel _viewModel;
     private readonly DispatcherTimer _connectionTimer;
 
@@ -65,7 +100,46 @@ public partial class MainWindow : Window
         };
         _connectionTimer.Tick += OnConnectionTimerTick;
         Loaded += OnLoaded;
+        SourceInitialized += OnSourceInitialized;
+        StateChanged += (_, _) => UpdateMaximizeRestoreButton();
         Closed += OnClosed;
+    }
+
+
+    private void OnSourceInitialized(object? sender, EventArgs e)
+    {
+        IntPtr handle = new WindowInteropHelper(this).Handle;
+        HwndSource.FromHwnd(handle)?.AddHook(WindowMessageHook);
+    }
+
+    private static IntPtr WindowMessageHook(IntPtr hwnd, int message, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        if (message != WmGetMinMaxInfo || lParam == IntPtr.Zero)
+            return IntPtr.Zero;
+
+        IntPtr monitor = MonitorFromWindow(hwnd, MonitorDefaultToNearest);
+        if (monitor == IntPtr.Zero)
+            return IntPtr.Zero;
+
+        var info = new MonitorInfo { Size = Marshal.SizeOf<MonitorInfo>() };
+        if (!GetMonitorInfo(monitor, ref info))
+            return IntPtr.Zero;
+
+        var minMax = Marshal.PtrToStructure<MinMaxInfo>(lParam);
+        minMax.MaxPosition = new NativePoint
+        {
+            X = info.Work.Left - info.Monitor.Left,
+            Y = info.Work.Top - info.Monitor.Top
+        };
+        minMax.MaxSize = new NativePoint
+        {
+            X = info.Work.Right - info.Work.Left,
+            Y = info.Work.Bottom - info.Work.Top
+        };
+
+        Marshal.StructureToPtr(minMax, lParam, false);
+        handled = true;
+        return IntPtr.Zero;
     }
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
