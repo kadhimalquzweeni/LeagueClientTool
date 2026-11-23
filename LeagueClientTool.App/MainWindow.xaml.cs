@@ -179,7 +179,7 @@ public partial class MainWindow : Window
     }
 
     private bool Confirm(string message, string title) =>
-        MessageBox.Show(this, message, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
+        MessageBox.Show(this, message, title, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
 
     private void OnClosed(object? sender, EventArgs e)
     {
