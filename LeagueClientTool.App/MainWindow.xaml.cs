@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Input;
 using System.Windows.Threading;
 using LeagueClientTool.App.ViewModels;
 
@@ -69,8 +70,7 @@ public partial class MainWindow : Window
 
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
-        ApplyDarkTitleBar();
-        HideWindowCaptionIcon();
+        UpdateMaximizeRestoreButton();
         await _viewModel.RefreshConnectionCommand.ExecuteAsync(null);
         _connectionTimer.Start();
     }
@@ -132,6 +132,54 @@ public partial class MainWindow : Window
     private static void SetDwmColor(IntPtr handle, int attribute, int color)
     {
         _ = DwmSetWindowAttribute(handle, attribute, ref color, sizeof(int));
+    }
+
+    private void OnTitleBarMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton != MouseButton.Left)
+            return;
+
+        if (e.ClickCount == 2)
+        {
+            ToggleMaximizeRestore();
+            return;
+        }
+
+        if (WindowState == WindowState.Maximized)
+        {
+            // Restore first so dragging a maximized window behaves naturally.
+            Point cursor = e.GetPosition(this);
+            double horizontalRatio = ActualWidth > 0 ? cursor.X / ActualWidth : 0.5;
+            WindowState = WindowState.Normal;
+            Left = Math.Max(0, e.GetPosition(this).X - RestoreBounds.Width * horizontalRatio);
+            Top = Math.Max(0, e.GetPosition(this).Y - 16);
+        }
+
+        DragMove();
+    }
+
+    private void OnMinimizeClick(object sender, RoutedEventArgs e) =>
+        WindowState = WindowState.Minimized;
+
+    private void OnMaximizeRestoreClick(object sender, RoutedEventArgs e) =>
+        ToggleMaximizeRestore();
+
+    private void OnCloseClick(object sender, RoutedEventArgs e) =>
+        Close();
+
+    private void ToggleMaximizeRestore()
+    {
+        WindowState = WindowState == WindowState.Maximized
+            ? WindowState.Normal
+            : WindowState.Maximized;
+
+        UpdateMaximizeRestoreButton();
+    }
+
+    private void UpdateMaximizeRestoreButton()
+    {
+        if (MaximizeRestoreButton is not null)
+            MaximizeRestoreButton.Content = WindowState == WindowState.Maximized ? "❐" : "□";
     }
 
     private async void OnConnectionTimerTick(object? sender, EventArgs e)
