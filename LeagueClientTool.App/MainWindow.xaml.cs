@@ -4,6 +4,7 @@ using System.Windows.Interop;
 using System.Windows.Input;
 using System.Windows.Threading;
 using LeagueClientTool.App.ViewModels;
+using System.Windows.Media;
 
 namespace LeagueClientTool.App;
 
