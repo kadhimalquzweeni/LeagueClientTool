@@ -13,6 +13,12 @@ public partial class MainWindow : Window
     private const int DwmwaBorderColor = 34;
     private const int DwmwaCaptionColor = 35;
     private const int DwmwaTextColor = 36;
+    private const int WmSetIcon = 0x0080;
+    private const int IconSmall = 0;
+    private const int IconBig = 1;
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    private static extern IntPtr SendMessage(IntPtr hwnd, int message, IntPtr wParam, IntPtr lParam);
 
     [DllImport("dwmapi.dll", PreserveSig = true)]
     private static extern int DwmSetWindowAttribute(
@@ -42,8 +48,16 @@ public partial class MainWindow : Window
     private async void OnLoaded(object sender, RoutedEventArgs e)
     {
         ApplyDarkTitleBar();
+        HideWindowCaptionIcon();
         await _viewModel.RefreshConnectionCommand.ExecuteAsync(null);
         _connectionTimer.Start();
+    }
+
+    private void HideWindowCaptionIcon()
+    {
+        IntPtr handle = new WindowInteropHelper(this).Handle;
+        _ = SendMessage(handle, WmSetIcon, new IntPtr(IconSmall), IntPtr.Zero);
+        _ = SendMessage(handle, WmSetIcon, new IntPtr(IconBig), IntPtr.Zero);
     }
 
     private void ApplyDarkTitleBar()
