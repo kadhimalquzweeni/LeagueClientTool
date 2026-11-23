@@ -17,6 +17,8 @@ public partial class MainWindow : Window
     private const int IconSmall = 0;
     private const int IconBig = 1;
     private const int GwlExStyle = -20;
+    private const int GclpHIcon = -14;
+    private const int GclpHIconSmall = -34;
     private const int WsExDlgModalFrame = 0x0001;
     private const uint SwpNoSize = 0x0001;
     private const uint SwpNoMove = 0x0002;
@@ -31,6 +33,9 @@ public partial class MainWindow : Window
 
     [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW")]
     private static extern IntPtr SetWindowLongPtr(IntPtr hwnd, int index, IntPtr newStyle);
+
+    [DllImport("user32.dll", EntryPoint = "SetClassLongPtrW")]
+    private static extern IntPtr SetClassLongPtr(IntPtr hwnd, int index, IntPtr newValue);
 
     [DllImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -84,6 +89,11 @@ public partial class MainWindow : Window
 
         _ = SendMessage(handle, WmSetIcon, new IntPtr(IconSmall), IntPtr.Zero);
         _ = SendMessage(handle, WmSetIcon, new IntPtr(IconBig), IntPtr.Zero);
+
+        // Also clear the window-class icons: Windows can fall back to these when
+        // the per-window WM_SETICON values are null.
+        _ = SetClassLongPtr(handle, GclpHIcon, IntPtr.Zero);
+        _ = SetClassLongPtr(handle, GclpHIconSmall, IntPtr.Zero);
 
         _ = SetWindowPos(
             handle,
