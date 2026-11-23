@@ -252,8 +252,14 @@ public partial class MainWindow : Window
 
     private void UpdateMaximizeRestoreButton()
     {
-        if (MaximizeRestoreButton is not null)
-            MaximizeRestoreButton.Content = WindowState == WindowState.Maximized ? "❐" : "□";
+        if (MaximizeRestoreButton?.Content is not System.Windows.Shapes.Path icon)
+            return;
+
+        bool isMaximized = WindowState == WindowState.Maximized;
+        icon.Data = Geometry.Parse(isMaximized
+            ? "M 7,4.5 H 15.5 V 13 M 4.5,7 H 13 V 15.5 H 4.5 Z"
+            : "M 4.5,4.5 H 15.5 V 15.5 H 4.5 Z");
+        MaximizeRestoreButton.ToolTip = isMaximized ? "Restore" : "Maximise";
     }
 
     private async void OnConnectionTimerTick(object? sender, EventArgs e)
